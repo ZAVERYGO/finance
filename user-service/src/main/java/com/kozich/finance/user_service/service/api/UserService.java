@@ -1,4 +1,4 @@
-package com.kozich.finance.user_service.Service.api;
+package com.kozich.finance.user_service.service.api;
 
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.model.UserEntity;

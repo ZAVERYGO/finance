@@ -1,16 +1,20 @@
-package com.kozich.finance.user_service.Service.impl;
+package com.kozich.finance.user_service.service.impl;
 
 
-import com.kozich.finance.user_service.Service.api.UserService;
+import com.kozich.finance.user_service.service.api.UserService;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.model.UserEntity;
+import com.kozich.finance.user_service.repository.UserRepository;
 
 import java.util.UUID;
 
 public class UserServiceImpl implements UserService {
 
+    private UserRepository userRepository;
+
     @Override
     public UserEntity get(UUID UUID, String page, String size) {
+
         return null;
     }
 
