@@ -1,6 +1,7 @@
 package com.kozich.finance.user_service.controller.http;
 
 import com.kozich.finance.user_service.core.dto.PageUserDTO;
+import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.model.UserEntity;
@@ -60,5 +61,11 @@ public class UserController {
 
         return pageUserDTO.setContent(contentDTO);
 
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@RequestBody UserCUDTO userCUDTO){
+        userService.create(userCUDTO);
     }
 }

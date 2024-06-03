@@ -1,5 +1,6 @@
 package com.kozich.finance.user_service.service.api;
 
+import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.model.UserEntity;
 import org.springframework.data.domain.Page;
@@ -12,9 +13,7 @@ public interface UserService {
 
     Page<UserEntity> getPage(Integer page, Integer size);
 
-    UserEntity create(UserDTO userDTO);
+    UserEntity create(UserCUDTO userDTO);
 
-    UserEntity update(UserDTO userDTO);
-
-    void delete(UUID uuid);
+    UserEntity update(UserCUDTO userDTO);
 }
