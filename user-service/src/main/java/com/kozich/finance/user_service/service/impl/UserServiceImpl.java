@@ -1,18 +1,20 @@
 package com.kozich.finance.user_service.service.impl;
 
 
+import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.service.api.UserService;
-import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Service
@@ -44,19 +46,22 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserEntity create(UserDTO userDTO) {
-        return null;
+    public UserEntity create(UserCUDTO userDTO) {
+
+        LocalDateTime date = LocalDateTime.now();
+
+        UserEntity userEntity = userMapper.userCUDTOToUserEntity(userDTO)
+                .setUuid(UUID.randomUUID())
+                .setDtCreate(date)
+                .setDtUpdate(date);
+
+        return userRepository.saveAndFlush(userEntity);
     }
 
     @Transactional
     @Override
-    public UserEntity update(UserDTO userDTO) {
+    public UserEntity update(UserCUDTO userDTO) {
         return null;
     }
 
-    @Transactional
-    @Override
-    public void delete(UUID uuid) {
-
-    }
 }
