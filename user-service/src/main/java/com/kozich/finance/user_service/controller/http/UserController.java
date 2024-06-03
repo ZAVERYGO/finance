@@ -68,4 +68,12 @@ public class UserController {
     public void create(@RequestBody UserCUDTO userCUDTO){
         userService.create(userCUDTO);
     }
+
+    @PutMapping("/{uuid}/dt_update/{dt_update}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void update(@RequestBody UserCUDTO userCUDTO,
+                       @PathVariable(value = "uuid") UUID uuid,
+                       @PathVariable(value = "dt_update") Long dtUpdate){
+        userService.update(uuid, userCUDTO, dtUpdate);
+    }
 }

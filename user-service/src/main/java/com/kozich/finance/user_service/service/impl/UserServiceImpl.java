@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -60,8 +60,25 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserEntity update(UserCUDTO userDTO) {
-        return null;
+    public UserEntity update(UUID uuid, UserCUDTO userCUDTO, Long dtUpdate) {
+
+        Optional<UserEntity> userEntity = userRepository.findById(uuid);
+
+        if(userEntity.isEmpty()){
+            throw new IllegalArgumentException("Не существует такого пользователя");
+        }
+
+        LocalDateTime localDateTime = Instant.ofEpochMilli(dtUpdate).atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        UserEntity resEntity = userEntity.get()
+                .setEmail(userCUDTO.getEmail())
+                .setFio(userCUDTO.getFio())
+                .setRole(userCUDTO.getRole())
+                .setStatus(userCUDTO.getStatus())
+                .setPassword(userCUDTO.getPassword())
+                .setDtUpdate(localDateTime);
+
+        return userRepository.saveAndFlush(resEntity);
     }
 
 }

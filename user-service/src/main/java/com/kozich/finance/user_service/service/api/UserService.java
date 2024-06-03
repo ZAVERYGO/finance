@@ -15,5 +15,5 @@ public interface UserService {
 
     UserEntity create(UserCUDTO userDTO);
 
-    UserEntity update(UserCUDTO userDTO);
+    UserEntity update(UUID uuid, UserCUDTO userCUDTO, Long dtUpdate);
 }
