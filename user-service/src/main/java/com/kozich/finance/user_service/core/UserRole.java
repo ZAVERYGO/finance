@@ -2,10 +2,10 @@ package com.kozich.finance.user_service.core;
 
 public enum UserRole {
 
-    ADMIN,
+    ROLE_ADMIN,
 
-    USER,
+    ROLE_USER,
 
-    MANAGER
+    ROLE_MANAGER
 
 }
