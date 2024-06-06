@@ -1,6 +1,6 @@
 package com.kozich.finance.user_service.service.impl;
 
-import com.kozich.finance.user_service.model.MyUserDetails;
+import com.kozich.finance.user_service.service.MyUserDetails;
 import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.repository.UserRepository;
 import com.kozich.finance.user_service.service.api.MyUserDetailsManager;

@@ -1,7 +1,6 @@
 package com.kozich.finance.user_service.controller.http;
 
 import com.kozich.finance.user_service.core.dto.PageUserDTO;
-import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.model.UserEntity;
@@ -65,15 +64,15 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody UserCUDTO userCUDTO){
-        userService.create(userCUDTO);
+    public void create(@RequestBody UserDTO UserDTO){
+        userService.create(UserDTO);
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void update(@RequestBody UserCUDTO userCUDTO,
+    public void update(@RequestBody UserDTO UserDTO,
                        @PathVariable(value = "uuid") UUID uuid,
                        @PathVariable(value = "dt_update") Long dtUpdate){
-        userService.update(uuid, userCUDTO, dtUpdate);
+        userService.update(uuid, UserDTO, dtUpdate);
     }
 }
