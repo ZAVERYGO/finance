@@ -1,7 +1,6 @@
 package com.kozich.finance.user_service.service.impl;
 
-
-import com.kozich.finance.user_service.core.dto.UserCUDTO;
+import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.service.api.UserService;
 import com.kozich.finance.user_service.model.UserEntity;
@@ -40,17 +39,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserEntity getByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow
+                (
+                    () -> new IllegalArgumentException("Пользователя не существует")
+                );
+    }
+
+    @Override
     public Page<UserEntity> getPage(Integer page, Integer size) {
         return userRepository.findAll(PageRequest.of(page, size));
     }
 
     @Transactional
     @Override
-    public UserEntity create(UserCUDTO userDTO) {
+    public UserEntity create(UserDTO userDTO) {
 
         LocalDateTime date = LocalDateTime.now();
 
-        UserEntity userEntity = userMapper.userCUDTOToUserEntity(userDTO)
+        UserEntity userEntity = userMapper.userDTOToUserEntity(userDTO)
                 .setUuid(UUID.randomUUID())
                 .setDtCreate(date)
                 .setDtUpdate(date);
@@ -60,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserEntity update(UUID uuid, UserCUDTO userCUDTO, Long dtUpdate) {
+    public UserEntity update(UUID uuid, UserDTO userDTO, Long dtUpdate) {
 
         Optional<UserEntity> userEntity = userRepository.findById(uuid);
 
@@ -71,14 +78,19 @@ public class UserServiceImpl implements UserService {
         LocalDateTime localDateTime = Instant.ofEpochMilli(dtUpdate).atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         UserEntity resEntity = userEntity.get()
-                .setEmail(userCUDTO.getEmail())
-                .setFio(userCUDTO.getFio())
-                .setRole(userCUDTO.getRole())
-                .setStatus(userCUDTO.getStatus())
-                .setPassword(userCUDTO.getPassword())
+                .setEmail(userDTO.getEmail())
+                .setFio(userDTO.getFio())
+                .setRole(userDTO.getRole())
+                .setStatus(userDTO.getStatus())
+                .setPassword(userDTO.getPassword())
                 .setDtUpdate(localDateTime);
 
         return userRepository.saveAndFlush(resEntity);
+    }
+
+    @Override
+    public void delete(UUID uuid) {
+        userRepository.deleteById(uuid);
     }
 
 }
