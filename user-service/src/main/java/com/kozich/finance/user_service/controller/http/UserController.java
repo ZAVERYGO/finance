@@ -63,16 +63,16 @@ public class UserController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody UserDTO UserDTO){
-        userService.create(UserDTO);
-    }
+        @ResponseStatus(HttpStatus.CREATED)
+        public void create(@RequestBody UserDTO UserDTO){
+            userService.create(UserDTO);
+        }
 
-    @PutMapping("/{uuid}/dt_update/{dt_update}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void update(@RequestBody UserDTO UserDTO,
-                       @PathVariable(value = "uuid") UUID uuid,
-                       @PathVariable(value = "dt_update") Long dtUpdate){
-        userService.update(uuid, UserDTO, dtUpdate);
+        @PutMapping("/{uuid}/dt_update/{dt_update}")
+        @ResponseStatus(HttpStatus.OK)
+        public void update(@RequestBody UserDTO UserDTO,
+                @PathVariable(value = "uuid") UUID uuid,
+                @PathVariable(value = "dt_update") Long dtUpdate){
+            userService.update(uuid, UserDTO, dtUpdate);
     }
 }
