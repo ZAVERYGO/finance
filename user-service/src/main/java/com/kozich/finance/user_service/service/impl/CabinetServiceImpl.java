@@ -1,5 +1,6 @@
 package com.kozich.finance.user_service.service.impl;
 
+import com.kozich.finance.user_service.controller.utils.JwtTokenHandler;
 import com.kozich.finance.user_service.core.MessageStatus;
 import com.kozich.finance.user_service.core.UserRole;
 import com.kozich.finance.user_service.core.UserStatus;
@@ -10,7 +11,12 @@ import com.kozich.finance.user_service.model.MessageEntity;
 import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import com.kozich.finance.user_service.service.api.MessageService;
+import com.kozich.finance.user_service.service.api.MyUserDetailsManager;
 import com.kozich.finance.user_service.service.api.UserService;
+import io.jsonwebtoken.JwtHandler;
+import org.apache.tomcat.util.buf.UEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +30,18 @@ public class CabinetServiceImpl implements CabinetService {
     private final UserService userService;
     private final MessageService messageService;
     private final UserMapper userMapper;
+    private final MyUserDetailsManager userDetailsManager;
+    private final PasswordEncoder encoder;
+    private final JwtTokenHandler jwtHandler;
 
-    public CabinetServiceImpl(UserService userService, MessageService messageService1, UserMapper userMapper) {
+    public CabinetServiceImpl(UserService userService, MessageService messageService1,
+                              UserMapper userMapper, MyUserDetailsManager userDetailsManager, PasswordEncoder encoder, JwtTokenHandler jwtHandler) {
         this.userService = userService;
         this.messageService = messageService1;
         this.userMapper = userMapper;
+        this.userDetailsManager = userDetailsManager;
+        this.encoder = encoder;
+        this.jwtHandler = jwtHandler;
     }
 
     @Transactional
@@ -76,7 +89,17 @@ public class CabinetServiceImpl implements CabinetService {
         }else {
             throw new IllegalArgumentException("Неверный код верификации");
         }
+    }
 
+    @Override
+    public String loginUser(UserDTO userDTO) {
+        UserDetails userDetails = userDetailsManager.userDetailsService()
+                .loadUserByUsername(userDTO.getEmail());
 
+        if(!encoder.matches(userDTO.getPassword(), userDetails.getPassword())){
+            throw new IllegalArgumentException("Неверный логин или пароль");
+        }
+
+        return jwtHandler.generateAccessToken(userDetails);
     }
 }

@@ -9,4 +9,5 @@ public interface CabinetService {
 
      void verifyUser(String code, String mail);
 
+     String loginUser(UserDTO userDTO);
 }
