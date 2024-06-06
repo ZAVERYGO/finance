@@ -7,6 +7,7 @@ import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +22,12 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
+    private final PasswordEncoder encoder;
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.encoder = encoder;
         this.userMapper = userMapper;
     }
 
@@ -60,6 +62,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userMapper.userDTOToUserEntity(userDTO)
                 .setUuid(UUID.randomUUID())
                 .setDtCreate(date)
+                .setPassword(encoder.encode(userDTO.getPassword()))
                 .setDtUpdate(date);
 
         return userRepository.saveAndFlush(userEntity);

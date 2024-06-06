@@ -54,6 +54,11 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.findById(uuid).get();
     }
 
+    @Override
+    public MessageEntity getByUser(UserEntity userEntity) {
+        return messageRepository.findByUserUuid(userEntity).orElseThrow(() -> new IllegalArgumentException("Не существует пользователя"));
+    }
+
     @Transactional
     @Override
     public MessageEntity update(MessageDTO messageDTO) {

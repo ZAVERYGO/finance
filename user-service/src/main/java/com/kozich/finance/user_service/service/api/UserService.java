@@ -16,7 +16,7 @@ public interface UserService {
 
     UserEntity create(UserDTO userDTO);
 
-    UserEntity update(UUID uuid, UserDTO userCUDTO, Long dtUpdate);
+    UserEntity update(UUID uuid, UserDTO userDTO, Long dtUpdate);
 
     void delete(UUID uuid);
 
