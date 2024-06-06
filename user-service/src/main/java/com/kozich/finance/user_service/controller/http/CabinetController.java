@@ -1,7 +1,11 @@
 package com.kozich.finance.user_service.controller.http;
 
 import com.kozich.finance.user_service.core.dto.UserDTO;
+import com.kozich.finance.user_service.mapper.UserMapper;
+import com.kozich.finance.user_service.model.UserEntity;
+import com.kozich.finance.user_service.service.UserHolder;
 import com.kozich.finance.user_service.service.api.CabinetService;
+import com.kozich.finance.user_service.service.api.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +14,15 @@ import org.springframework.web.bind.annotation.*;
 public class CabinetController {
 
     private final CabinetService cabinetService;
+    private final UserHolder userHolder;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    public CabinetController(CabinetService cabinetService) {
+    public CabinetController(CabinetService cabinetService, UserHolder userHolder, UserService userService, UserMapper userMapper) {
         this.cabinetService = cabinetService;
+        this.userHolder = userHolder;
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/registration")
@@ -38,5 +48,14 @@ public class CabinetController {
 
         return cabinetService.loginUser(UserDTO);
 
+    }
+
+    @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO getMyCabinet(){
+
+        UserEntity userEntity = userService.getByEmail(userHolder.getUser().getUsername());
+
+        return userMapper.userEntityToUserDTO(userEntity);
     }
 }
