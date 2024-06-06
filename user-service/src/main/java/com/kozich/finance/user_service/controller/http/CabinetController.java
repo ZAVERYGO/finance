@@ -2,7 +2,6 @@ package com.kozich.finance.user_service.controller.http;
 
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.service.api.CabinetService;
-import com.kozich.finance.user_service.service.api.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +24,7 @@ public class CabinetController {
     }
 
     @GetMapping("/verification")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public void verifyUser(@RequestParam(value = "code") String code,
                            @RequestParam(value = "mail") String mail){
 
@@ -33,4 +32,11 @@ public class CabinetController {
 
     }
 
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public String loginUser(@RequestBody UserDTO UserDTO){
+
+        return cabinetService.loginUser(UserDTO);
+
+    }
 }
