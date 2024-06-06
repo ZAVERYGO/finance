@@ -18,8 +18,19 @@ public class CabinetController {
 
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody UserDTO UserDTO){
+    public void registerUser(@RequestBody UserDTO UserDTO){
+
         cabinetService.registerUser(UserDTO);
+
+    }
+
+    @GetMapping("/verification")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void verifyUser(@RequestParam(value = "code") String code,
+                           @RequestParam(value = "mail") String mail){
+
+        cabinetService.verifyUser(code, mail);
+
     }
 
 }

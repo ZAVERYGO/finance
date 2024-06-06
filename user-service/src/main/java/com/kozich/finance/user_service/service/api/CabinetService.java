@@ -7,4 +7,6 @@ public interface CabinetService {
 
      UserEntity registerUser(UserDTO userDTO);
 
+     void verifyUser(String code, String mail);
+
 }
