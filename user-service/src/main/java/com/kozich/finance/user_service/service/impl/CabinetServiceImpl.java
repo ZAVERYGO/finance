@@ -43,7 +43,7 @@ public class CabinetServiceImpl implements CabinetService {
                 .setStatus(UserStatus.WAITING_ACTIVATION));
 
         Random random = new Random();
-        int code = random.nextInt(10000);
+        int code = random.nextInt(1000000);
 
         MessageDTO messageDTO = new MessageDTO()
                 .setStatus(MessageStatus.LOADED)
