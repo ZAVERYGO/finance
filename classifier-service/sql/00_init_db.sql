@@ -1,4 +1,4 @@
-CREATE ROLE user_app WITH
+CREATE ROLE classifier_app WITH
 	LOGIN
 	NOSUPERUSER
 	CREATEDB
@@ -11,9 +11,9 @@ CREATE ROLE user_app WITH
 
 
 
-CREATE DATABASE "user"
+CREATE DATABASE classifier
     WITH
-    OWNER = user_app
+    OWNER = classifier_app
     ENCODING = 'UTF8'
     LOCALE_PROVIDER = 'libc'
     CONNECTION LIMIT = -1

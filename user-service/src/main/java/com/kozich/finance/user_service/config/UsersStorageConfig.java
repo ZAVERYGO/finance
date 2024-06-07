@@ -23,7 +23,7 @@ public class UsersStorageConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    /*@Bean
     @ConditionalOnProperty(value = "app.user.storage", havingValue = "MEMORY", matchIfMissing = true)
     public UserDetailsManager memoryUserManager(PasswordEncoder encoder) {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
@@ -42,10 +42,10 @@ public class UsersStorageConfig {
                 .build());
 
         return manager;
-    }
+    }*/
 
     @Bean
-    @ConditionalOnProperty(value = "app.user.storage", havingValue = "JDBC")
+   // @ConditionalOnProperty(value = "app.user.storage", havingValue = "JDBC")
     public UserDetailsManager jdbcUserManager(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }

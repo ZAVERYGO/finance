@@ -25,7 +25,7 @@ public class MessageSendJob {
 
         List<MessageEntity> allByStatus = messageService.getAllByStatus(MessageStatus.LOADED);
 
-        if(allByStatus == null){
+        if(allByStatus != null){
             return;
         }
         for (MessageEntity mail : allByStatus) {
