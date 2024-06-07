@@ -5,7 +5,7 @@ import com.kozich.finance.classifier_service.model.CurrencyEntity;
 import com.kozich.finance.classifier_service.repository.CurrencyRepository;
 import com.kozich.finance.classifier_service.service.api.CurrencyService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.util.CastUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +40,6 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public Page<CurrencyEntity> getPage(Integer page, Integer size) {
-        return null;
+        return currencyRepository.findAll(PageRequest.of(page, size));
     }
 }
