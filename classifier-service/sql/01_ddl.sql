@@ -12,6 +12,18 @@ CREATE TABLE app.currency
     CONSTRAINT currency_title_unq UNIQUE (title)
 );
 
+CREATE TABLE app.category
+(
+    uuid uuid,
+    title VARCHAR(3) NOT NULL,
+    dt_create TIMESTAMP NOT NULL,
+    dt_update TIMESTAMP NOT NULL,
+    CONSTRAINT category_uuid_pk PRIMARY KEY (uuid)
+);
+
 
 ALTER TABLE IF EXISTS app.currency
+    OWNER to classifier_app;
+
+ALTER TABLE IF EXISTS app.category
     OWNER to classifier_app;

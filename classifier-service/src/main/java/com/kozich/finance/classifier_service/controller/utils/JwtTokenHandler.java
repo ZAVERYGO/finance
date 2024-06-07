@@ -1,6 +1,5 @@
 package com.kozich.finance.classifier_service.controller.utils;
 
-import com.kozich.finance.user_service.config.properites.JWTProperty;
 import io.jsonwebtoken.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
