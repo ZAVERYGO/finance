@@ -1,12 +1,12 @@
 server:
-  port: 8084
+  port: 8083
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/user
+    url: jdbc:postgresql://localhost:5432/classifier
     username: postgres
     password: postgres
 
 app:
   jwt:
-    secret: sdvsdvsdvsdvsd
+    secret: I26tXMOZepPHyd_fDTxirlfk60dgL_P0XB8D0qhY4jI

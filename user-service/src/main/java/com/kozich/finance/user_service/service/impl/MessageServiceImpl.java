@@ -69,8 +69,7 @@ public class MessageServiceImpl implements MessageService {
         if(messageDTO.getCode() != null){
             message.setCode(messageDTO.getCode());
         }
-            message
-                .setStatus(messageDTO.getStatus());
+            message.setStatus(messageDTO.getStatus());
 
         return messageRepository.saveAndFlush(message);
     }

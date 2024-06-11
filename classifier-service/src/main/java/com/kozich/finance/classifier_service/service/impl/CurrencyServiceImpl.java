@@ -26,6 +26,9 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public CurrencyEntity create(CurrencyDTO currencyDTO) {
 
+        if(currencyRepository.findByTitle(currencyDTO.getTitle()).isPresent()){
+            throw new IllegalArgumentException("Валюта уже существует");
+        }
         LocalDateTime localDateTime = LocalDateTime.now();
 
         CurrencyEntity currencyEntity = new CurrencyEntity()
@@ -42,4 +45,11 @@ public class CurrencyServiceImpl implements CurrencyService {
     public Page<CurrencyEntity> getPage(Integer page, Integer size) {
         return currencyRepository.findAll(PageRequest.of(page, size));
     }
+
+    @Override
+    public CurrencyEntity getById(UUID uuid) {
+        return currencyRepository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Валюты не существует"));
+    }
+
+
 }

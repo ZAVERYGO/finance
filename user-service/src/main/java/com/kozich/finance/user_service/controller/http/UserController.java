@@ -1,13 +1,17 @@
 package com.kozich.finance.user_service.controller.http;
 
 import com.kozich.finance.user_service.core.dto.PageUserDTO;
+import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.service.api.UserService;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,7 +19,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/users")
+@Validated
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -37,8 +42,8 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PageUserDTO getPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                               @RequestParam(value = "size", defaultValue = "20") Integer size){
+    public PageUserDTO getPage(@PositiveOrZero @RequestParam(value = "page", defaultValue = "0") Integer page,
+                               @Positive @RequestParam(value = "size", defaultValue = "20") Integer size){
 
         Page<UserEntity> pageEntity = userService.getPage(page, size);
 
@@ -63,16 +68,17 @@ public class UserController {
     }
 
     @PostMapping
-        @ResponseStatus(HttpStatus.CREATED)
-        public void create(@RequestBody UserDTO UserDTO){
-            userService.create(UserDTO);
-        }
-
-        @PutMapping("/{uuid}/dt_update/{dt_update}")
-        @ResponseStatus(HttpStatus.OK)
-        public void update(@RequestBody UserDTO UserDTO,
-                @PathVariable(value = "uuid") UUID uuid,
-                @PathVariable(value = "dt_update") Long dtUpdate){
-            userService.update(uuid, UserDTO, dtUpdate);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@Valid @RequestBody UserCUDTO userCDTO){
+        userService.create(userCDTO);
     }
+
+    @PutMapping("/{uuid}/dt_update/{dt_update}")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody UserDTO UserDTO,
+                       @PathVariable(value = "uuid") UUID uuid,
+                       @PathVariable(value = "dt_update") Long dtUpdate){
+        userService.update(uuid, UserDTO, dtUpdate);
+    }
+
 }

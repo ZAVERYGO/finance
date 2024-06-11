@@ -1,6 +1,9 @@
 package com.kozich.finance.classifier_service.core.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +22,17 @@ public class CurrencyDTO {
 
     private UUID uuid;
 
+    @NotBlank
+    @Size(min = 3, max = 3)
     private String title;
 
+    @NotBlank
     private String description;
 
-    private LocalDateTime dtCreate;
+    @JsonProperty("dt_create")
+    private Long dtCreate;
 
-    private LocalDateTime dtUpdate;
+    @JsonProperty("dt_update")
+    private Long dtUpdate;
 
 }

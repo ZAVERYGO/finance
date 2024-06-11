@@ -1,5 +1,6 @@
 package com.kozich.finance.user_service.service.impl;
 
+import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.service.api.UserService;
@@ -11,9 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,19 +33,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getById(UUID uuid) {
-        UserEntity userEntity = userRepository.findById(uuid).orElseThrow
-                (
-                    () -> new IllegalArgumentException("Пользователя не существует")
-                );
+        UserEntity userEntity = userRepository.findById(uuid).orElseThrow(
+                    () -> new IllegalArgumentException("Пользователя не существует"));
         return userEntity;
     }
 
     @Override
     public UserEntity getByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow
-                (
-                    () -> new IllegalArgumentException("Пользователя не существует")
-                );
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("Пользователя не существует"));
+        return userEntity;
     }
 
     @Override
@@ -55,14 +52,21 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserEntity create(UserDTO userDTO) {
+    public UserEntity create(UserCUDTO userCDTO) {
 
+        if(existsByEmail(userCDTO.getEmail())){
+            throw new IllegalArgumentException("Пользователь уже существует");
+        }
         LocalDateTime date = LocalDateTime.now();
 
-        UserEntity userEntity = userMapper.userDTOToUserEntity(userDTO)
+        UserEntity userEntity = new UserEntity()
                 .setUuid(UUID.randomUUID())
+                .setFio(userCDTO.getFio())
+                .setEmail(userCDTO.getEmail())
+                .setStatus(userCDTO.getStatus())
+                .setRole(userCDTO.getRole())
                 .setDtCreate(date)
-                .setPassword(encoder.encode(userDTO.getPassword()))
+                .setPassword(encoder.encode(userCDTO.getPassword()))
                 .setDtUpdate(date);
 
         return userRepository.saveAndFlush(userEntity);
@@ -75,20 +79,26 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userEntity = userRepository.findById(uuid);
 
         if(userEntity.isEmpty()){
-            throw new IllegalArgumentException("Не существует такого пользователя");
+            throw new IllegalArgumentException("Пользователя не существует");
         }
-
-        LocalDateTime localDateTime = Instant.ofEpochMilli(dtUpdate).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        Long dateTime = userEntity.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
+        if(!dateTime.equals(dtUpdate)){
+            throw new IllegalArgumentException("Пользователь уже был изменен");
+        }
 
         UserEntity resEntity = userEntity.get()
                 .setEmail(userDTO.getEmail())
                 .setFio(userDTO.getFio())
                 .setRole(userDTO.getRole())
                 .setStatus(userDTO.getStatus())
-                .setPassword(userDTO.getPassword())
-                .setDtUpdate(localDateTime);
+                .setPassword(encoder.encode(userDTO.getPassword()));
 
         return userRepository.saveAndFlush(resEntity);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override

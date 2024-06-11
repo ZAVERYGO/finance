@@ -15,10 +15,11 @@ CREATE TABLE app.currency
 CREATE TABLE app.category
 (
     uuid uuid,
-    title VARCHAR(3) NOT NULL,
+    title character varying NOT NULL,
     dt_create TIMESTAMP NOT NULL,
     dt_update TIMESTAMP NOT NULL,
-    CONSTRAINT category_uuid_pk PRIMARY KEY (uuid)
+    CONSTRAINT category_uuid_pk PRIMARY KEY (uuid),
+    CONSTRAINT category_title_unq UNIQUE (title)
 );
 
 

@@ -35,13 +35,14 @@ public class UserEntity {
     @Column(name = "dt_Create")
     private LocalDateTime dtCreate;
 
+    @Version
     @Column(name = "dt_Update")
     private LocalDateTime dtUpdate;
 
     @OneToOne(mappedBy = "userUuid")
     private MessageEntity messageEntity;
 
-    public UserEntity() {
+        public UserEntity() {
     }
 
     public UserEntity(UUID uuid, String email, String fio, UserRole role, UserStatus status,

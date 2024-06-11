@@ -1,6 +1,5 @@
-package com.kozich.finance.user_service.service;
+package com.kozich.finance.user_service.model;
 
-import com.kozich.finance.user_service.model.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,12 +9,12 @@ import java.util.List;
 
 public class MyUserDetails implements UserDetails {
 
-    UserEntity userEntity;
-    List<SimpleGrantedAuthority> simpleGrantedAuthorities;
+    private final UserEntity userEntity;
+    private final List<SimpleGrantedAuthority> simpleGrantedAuthorities;
 
     public MyUserDetails(UserEntity userEntity) {
         this.userEntity = userEntity;
-        List<SimpleGrantedAuthority> simpleGrantedAuthorities = List.of(new SimpleGrantedAuthority(userEntity.getRole().name()));
+        simpleGrantedAuthorities = List.of(new SimpleGrantedAuthority(userEntity.getRole().name()));
     }
 
     @Override

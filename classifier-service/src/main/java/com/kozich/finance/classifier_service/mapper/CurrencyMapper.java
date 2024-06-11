@@ -10,7 +10,7 @@ import org.mapstruct.Named;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoField;
+import java.time.ZoneOffset;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CurrencyMapper {
@@ -27,18 +27,17 @@ public interface CurrencyMapper {
         return Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-
     @Mapping(target = "dtCreate", qualifiedByName = "mapLocalDateTimeToLong", source = "dtCreate")
     @Mapping(target = "dtUpdate", qualifiedByName = "mapLocalDateTimeToLong", source = "dtUpdate")
     CurrencyDTO currencyEntityToCurrencyDTO(CurrencyEntity userEntity);
-
 
     @Named("mapLocalDateTimeToLong")
     default Long mapLocalDateTimeToLong(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
-        return dateTime.getLong(ChronoField.MILLI_OF_SECOND);
+        return dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
+
 
 }
