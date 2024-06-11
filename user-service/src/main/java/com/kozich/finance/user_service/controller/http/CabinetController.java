@@ -1,16 +1,24 @@
 package com.kozich.finance.user_service.controller.http;
 
+import com.kozich.finance.user_service.core.dto.LoginDTO;
+import com.kozich.finance.user_service.core.dto.RegistrationDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.service.UserHolder;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import com.kozich.finance.user_service.service.api.UserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/cabinet")
+@Validated
+@RequestMapping("/cabinet")
 public class CabinetController {
 
     private final CabinetService cabinetService;
@@ -27,16 +35,16 @@ public class CabinetController {
 
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@RequestBody UserDTO UserDTO){
+    public void registerUser(@Valid @RequestBody RegistrationDTO registrationDTO){
 
-        cabinetService.registerUser(UserDTO);
+        cabinetService.registerUser(registrationDTO);
 
     }
 
     @GetMapping("/verification")
     @ResponseStatus(HttpStatus.OK)
-    public void verifyUser(@RequestParam(value = "code") String code,
-                           @RequestParam(value = "mail") String mail){
+    public void verifyUser(@NotBlank @PositiveOrZero @RequestParam(value = "code") String code,
+                           @NotBlank @Email @RequestParam(value = "mail") String mail){
 
         cabinetService.verifyUser(code, mail);
 
@@ -44,9 +52,9 @@ public class CabinetController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public String loginUser(@RequestBody UserDTO UserDTO){
+    public String loginUser(@Valid @RequestBody LoginDTO loginDTO){
 
-        return cabinetService.loginUser(UserDTO);
+        return cabinetService.loginUser(loginDTO);
 
     }
 

@@ -1,5 +1,7 @@
 package com.kozich.finance.classifier_service.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +20,13 @@ public class CategoryDTO {
 
     private UUID uuid;
 
+    @NotBlank
     private String title;
 
-    private LocalDateTime dtCreate;
+    @JsonProperty("dt_create")
+    private Long dtCreate;
 
-    private LocalDateTime dtUpdate;
+    @JsonProperty("dt_update")
+    private Long dtUpdate;
 
 }

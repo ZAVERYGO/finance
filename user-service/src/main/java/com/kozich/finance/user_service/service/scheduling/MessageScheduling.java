@@ -13,7 +13,7 @@ public class MessageScheduling {
     private final ScheduledExecutorService executorService;
     private final MessageSendJob messageSendJob;
     private static final int CORE_SIZE = 5;
-    private static final long DELAY = 20L;
+    private static final long DELAY = 5L;
     private static final TimeUnit UNIT = TimeUnit.SECONDS;
 
     public MessageScheduling(MessageSendJob mailSendJob) {

@@ -10,6 +10,7 @@ import org.mapstruct.Named;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
@@ -38,7 +39,7 @@ public interface UserMapper {
         if (dateTime == null) {
             return null;
         }
-        return dateTime.getLong(ChronoField.MILLI_OF_SECOND);
+        return dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 
 }

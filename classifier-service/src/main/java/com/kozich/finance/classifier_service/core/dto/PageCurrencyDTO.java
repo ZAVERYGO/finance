@@ -1,5 +1,6 @@
 package com.kozich.finance.classifier_service.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,15 @@ public class PageCurrencyDTO {
 
     private Integer size;
 
+    @JsonProperty("total_pages")
     private Integer totalPages;
 
+    @JsonProperty("total_elements")
     private Long totalElements;
 
     private Boolean first;
 
+    @JsonProperty("number_of_elements")
     private Integer numberOfElements;
 
     private Boolean last;

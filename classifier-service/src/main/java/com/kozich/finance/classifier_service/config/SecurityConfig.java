@@ -1,9 +1,12 @@
 package com.kozich.finance.classifier_service.config;
 
 
+import com.kozich.finance.classifier_service.controller.filter.JwtFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Request;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -43,12 +47,12 @@ public class SecurityConfig {
         // Set permissions on endpoints
         http.authorizeHttpRequests(requests -> requests
                 // Our public endpoints
-                .requestMatchers( "/api/classifier/**").hasAnyRole("ADMIN")
-                //Следующие два пример делают одно и тоже
-                .requestMatchers("/api/cabinet/registration").permitAll() //Обрати внимание что тут нет префикса ROLE_
-                .requestMatchers("/api/cabinet/verification").permitAll()  //А тут есть
-                .requestMatchers("/api/cabinet/login").permitAll()
-                .requestMatchers("/api/cabinet/me").authenticated()
+                .requestMatchers(HttpMethod.GET,"/classifier/currency").permitAll()
+                .requestMatchers(HttpMethod.POST,"/classifier/currency").authenticated()//Обрати внимание что тут нет префикса ROLE_
+                .requestMatchers(HttpMethod.POST, "/classifier/operation/category").authenticated()  //А тут есть
+                .requestMatchers(HttpMethod.GET, "/classifier/operation/category").permitAll()
+                .requestMatchers(HttpMethod.GET, "/classifier/currency/{uuid}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/classifier/operation/category/{uuid}").permitAll()
                 // Our private endpoints
                 .anyRequest().authenticated()
         );

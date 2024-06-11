@@ -18,6 +18,7 @@ public class MessageEntity {
     private String code;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private MessageStatus status;
 
     @Column(name = "dt_Create")

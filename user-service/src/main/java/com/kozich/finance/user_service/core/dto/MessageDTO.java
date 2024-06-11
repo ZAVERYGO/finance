@@ -1,5 +1,6 @@
 package com.kozich.finance.user_service.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kozich.finance.user_service.core.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +18,12 @@ public class MessageDTO {
 
     private String code;
 
+    @JsonProperty("mail")
     private String email;
 
     private MessageStatus status;
 
-    private LocalDateTime dtCreate;
+    @JsonProperty("dt_create")
+    private Long dtCreate;
 
 }
