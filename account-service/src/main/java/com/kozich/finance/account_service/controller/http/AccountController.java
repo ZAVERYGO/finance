@@ -6,6 +6,7 @@ import com.kozich.finance.account_service.core.dto.PageAccountDTO;
 import com.kozich.finance.account_service.mapper.AccountMapper;
 import com.kozich.finance.account_service.model.AccountEntity;
 import com.kozich.finance.account_service.model.OperationEntity;
+import com.kozich.finance.account_service.service.UserHolder;
 import com.kozich.finance.account_service.service.api.AccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -28,9 +29,12 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountMapper accountMapper;
 
-    public AccountController(AccountService accountService, AccountMapper accountMapper) {
+    private final UserHolder userHolder;
+
+    public AccountController(AccountService accountService, AccountMapper accountMapper, UserHolder userHolder) {
         this.accountService = accountService;
         this.accountMapper = accountMapper;
+        this.userHolder = userHolder;
     }
 
     @PostMapping
@@ -70,7 +74,7 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public AccountDTO get(@PathVariable(name = "uuid") UUID uuid){
 
-        AccountEntity byId = accountService.getById(uuid);
+        AccountEntity byId = accountService.getByUuidAndEmail(uuid, userHolder.getUser().getUsername());
         return accountMapper.accountEntityToAccountDTO(byId);
     }
 
