@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ErrorResponse {
 
-    private String error;
+    private String logref;
 
     private String message;
 

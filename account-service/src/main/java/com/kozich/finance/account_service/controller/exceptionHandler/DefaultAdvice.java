@@ -30,6 +30,7 @@ public class DefaultAdvice {
 
    @ExceptionHandler({Exception.class})
    public ResponseEntity<ErrorResponse> exception(Exception e){
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+       ErrorResponse errorResponse = new ErrorResponse("error", "Сервер не смог корректно обработать запрос. Пожалуйста обратитесь к администратору");
+       return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
    }
 }
