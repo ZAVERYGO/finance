@@ -1,5 +1,6 @@
 package com.kozich.finance.user_service;
 
+import com.kozich.finance.user_service.config.UsersStorageConfig;
 import com.kozich.finance.user_service.config.properites.JWTProperty;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

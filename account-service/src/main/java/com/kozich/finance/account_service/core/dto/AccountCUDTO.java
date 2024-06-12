@@ -26,7 +26,6 @@ public class AccountCUDTO {
     @NotBlank
     private String description;
 
-    @NotBlank
     private AccountType type;
 
     @JsonProperty("currency")
