@@ -22,6 +22,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     private final PasswordEncoder encoder;
     private final UserMapper userMapper;
 
@@ -90,8 +91,11 @@ public class UserServiceImpl implements UserService {
                 .setEmail(userDTO.getEmail())
                 .setFio(userDTO.getFio())
                 .setRole(userDTO.getRole())
-                .setStatus(userDTO.getStatus())
-                .setPassword(encoder.encode(userDTO.getPassword()));
+                .setStatus(userDTO.getStatus());
+
+        if(userDTO.getPassword() == null) {
+            resEntity.setPassword(userEntity.get().getPassword());
+        }
 
         return userRepository.saveAndFlush(resEntity);
     }

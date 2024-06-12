@@ -31,7 +31,7 @@ public class AccountDTO {
     @JsonProperty("dt_create")
     private Long dtCreate;
 
-    @JsonProperty("dt_create")
+    @JsonProperty("dt_update")
     private Long dtUpdate;
 
     @JsonProperty("currency")

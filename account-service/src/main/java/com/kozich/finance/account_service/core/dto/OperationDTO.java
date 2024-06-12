@@ -1,5 +1,6 @@
 package com.kozich.finance.account_service.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,15 @@ public class OperationDTO {
 
     private Integer value;
 
+    @JsonProperty("dt_create")
     private Long dtCreate;
 
+    @JsonProperty("dt_update")
     private Long dtUpdate;
 
+    @JsonProperty("currency")
     private UUID currencyUuid;
 
+    @JsonProperty("category")
     private UUID categoryUuid;
 }

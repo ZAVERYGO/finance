@@ -75,7 +75,7 @@ public class CabinetServiceImpl implements CabinetService {
 
         UserEntity userEntity = userService.getByEmail(mail);
 
-        if(!userEntity.getStatus().equals(UserStatus.WAITING_ACTIVATION)){
+        if(userEntity.getStatus().equals(UserStatus.ACTIVATED)){
             throw new IllegalArgumentException("Пользователь уже верифицирован");
         }
         MessageEntity messageEntity = messageService.getByUser(userEntity);
@@ -102,11 +102,16 @@ public class CabinetServiceImpl implements CabinetService {
         UserEntity userEntity;
         if(userService.existsByEmail(email)){
             userEntity = userService.getByEmail(email);
+            if(!userEntity.getStatus().equals(UserStatus.ACTIVATED)){
+                throw new IllegalArgumentException("Вы не прошли верификацию");
+            }
         }else{
             throw new IllegalArgumentException("Неверный логин или пароль");
         }
 
-        if(!encoder.matches(loginDTO.getPassword(), userEntity.getPassword())){
+        String passwordDTO = loginDTO.getPassword();
+        String passwordEntity = userEntity.getPassword();
+        if(!encoder.matches(passwordDTO, passwordEntity)){
             throw new IllegalArgumentException("Неверный логин или пароль");
         }
 
