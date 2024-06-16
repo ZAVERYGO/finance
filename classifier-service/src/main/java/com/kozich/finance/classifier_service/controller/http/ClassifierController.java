@@ -113,24 +113,6 @@ public class ClassifierController {
 
     }
 
-    @GetMapping("/currency/{uuid}")
-    @ResponseStatus(HttpStatus.OK)
-    public CurrencyDTO getCurrencyById(@PathVariable(value = "uuid") UUID uuid){
 
-        CurrencyEntity byId = currencyService.getById(uuid);
-
-        return currencyMapper.currencyEntityToCurrencyDTO(byId);
-
-    }
-
-    @GetMapping("/operation/category/{uuid}")
-    @ResponseStatus(HttpStatus.OK)
-    public CategoryDTO getCategoryById(@PathVariable(value = "uuid") UUID uuid){
-
-        CategoryEntity byId = categoryService.getById(uuid);
-
-        return categoryMapper.categoryEntityToCategoryDTO(byId);
-
-    }
 
 }

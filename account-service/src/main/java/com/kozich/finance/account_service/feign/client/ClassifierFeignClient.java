@@ -1,8 +1,5 @@
-package com.kozich.finance.account_service.controller.feign;
+package com.kozich.finance.account_service.feign.client;
 
-
-import feign.FeignException;
-import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.UUID;
 
-@FeignClient(name = "classifier-service", url = "http://localhost:8083/classifier")
+@FeignClient(name = "classifier-service", url = "${url.classifier}")
 public interface ClassifierFeignClient {
 
     @GetMapping("/currency/{uuid}")

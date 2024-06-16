@@ -82,7 +82,7 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable(value = "uuid") UUID uuid,
                                            @PathVariable(value = "dt_update") Long dtUpdate,
-                                           @RequestBody AccountCUDTO accountCUDTO){
+                                           @Valid @RequestBody AccountCUDTO accountCUDTO){
 
         accountService.update(uuid, accountCUDTO, dtUpdate);
 

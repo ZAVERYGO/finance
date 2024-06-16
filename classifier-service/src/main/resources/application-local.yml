@@ -1,0 +1,13 @@
+server:
+  port: 8085
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/classifier
+    username: classifier_app
+    password: 123456
+
+url:
+  users: http://localhost:8082/feign
+  audit: http://localhost:8087/feign

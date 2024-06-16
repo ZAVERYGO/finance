@@ -2,6 +2,8 @@ package com.kozich.finance.account_service.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jdk.jfr.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,16 +21,15 @@ import java.util.UUID;
 @Accessors(chain = true)
 public class OperationCUDTO {
 
-    @NotBlank
     private Long date;
 
     @NotBlank
     private String description;
 
-    @NotBlank
+    @NotNull
     private Integer value;
 
-    @NotBlank
+    @JsonProperty("currency")
     private UUID currencyUuid;
 
     @JsonProperty("category")

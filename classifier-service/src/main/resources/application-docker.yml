@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://pg_db:5432/classifier
+    username: classifier_app
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+
+url:
+  users: http://user-service:8080/feign
+  audit: http://audit-service:8080/feign

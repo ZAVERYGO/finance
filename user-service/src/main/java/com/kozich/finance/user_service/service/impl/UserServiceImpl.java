@@ -22,7 +22,6 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder encoder;
     private final UserMapper userMapper;
 
@@ -75,9 +74,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserEntity update(UUID uuid, UserDTO userDTO, Long dtUpdate) {
+    public UserEntity update(UUID uuid, UserCUDTO userCUDTO, Long dtUpdate) {
 
         Optional<UserEntity> userEntity = userRepository.findById(uuid);
+
 
         if(userEntity.isEmpty()){
             throw new IllegalArgumentException("Пользователя не существует");
@@ -87,15 +87,22 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Пользователь уже был изменен");
         }
 
-        UserEntity resEntity = userEntity.get()
-                .setEmail(userDTO.getEmail())
-                .setFio(userDTO.getFio())
-                .setRole(userDTO.getRole())
-                .setStatus(userDTO.getStatus());
+        Optional<UserEntity> byEmail = userRepository.findByEmail(userCUDTO.getEmail());
 
-        if(userDTO.getPassword() == null) {
+        if(!userEntity.get().getEmail().equals(userCUDTO.getEmail()) && byEmail.isPresent()){
+            throw new IllegalArgumentException("Логин пользователя занят");
+        }
+
+        UserEntity resEntity = userEntity.get()
+                .setEmail(userCUDTO.getEmail())
+                .setFio(userCUDTO.getFio())
+                .setRole(userCUDTO.getRole())
+                .setStatus(userCUDTO.getStatus());
+
+        if(userCUDTO.getPassword() == null) {
             resEntity.setPassword(userEntity.get().getPassword());
         }
+
 
         return userRepository.saveAndFlush(resEntity);
     }

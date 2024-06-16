@@ -75,10 +75,10 @@ public class UserController {
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody UserDTO UserDTO,
+    public void update(@RequestBody UserCUDTO userCDTO,
                        @PathVariable(value = "uuid") UUID uuid,
                        @PathVariable(value = "dt_update") Long dtUpdate){
-        userService.update(uuid, UserDTO, dtUpdate);
+        userService.update(uuid, userCDTO, dtUpdate);
     }
 
 }

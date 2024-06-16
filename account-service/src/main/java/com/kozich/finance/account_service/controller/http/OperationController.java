@@ -68,7 +68,7 @@ public class OperationController {
     }
 
     @PutMapping("/{uuid}/operation/{uuid_operation}/dt_update/{dt_update}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable(name = "uuid") UUID uuid,
                                 @PathVariable(name = "uuid_operation") UUID uuidOperation,
                                 @PathVariable(name = "dt_update") Long dtUpdate,

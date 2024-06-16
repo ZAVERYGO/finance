@@ -31,7 +31,6 @@ public class UserDTO {
 
     private UserStatus status;
 
-    @NotBlank
     private String password;
 
     @JsonProperty("dt_create")

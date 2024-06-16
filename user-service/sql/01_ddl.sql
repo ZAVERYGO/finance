@@ -1,3 +1,4 @@
+
 CREATE SCHEMA app
     AUTHORIZATION user_app;
 

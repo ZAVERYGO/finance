@@ -1,6 +1,6 @@
 package com.kozich.finance.account_service.service.impl;
 
-import com.kozich.finance.account_service.controller.feign.ClassifierFeignClient;
+import com.kozich.finance.account_service.feign.client.ClassifierFeignClient;
 import com.kozich.finance.account_service.core.dto.*;
 import com.kozich.finance.account_service.model.OperationEntity;
 import com.kozich.finance.account_service.model.AccountEntity;
@@ -11,8 +11,6 @@ import com.kozich.finance.account_service.service.api.OperationService;
 import feign.FeignException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +48,7 @@ public class OperationServiceImpl implements OperationService {
         return operationRepository.findAllByAccountEntity(PageRequest.of(page, size), byId);
     }
 
+    @Transactional
     @Override
     public OperationEntity create(OperationCUDTO operationCUDTO, UUID uuid) {
 
@@ -73,12 +72,13 @@ public class OperationServiceImpl implements OperationService {
                 .setDtCreate(localDateTime)
                 .setDtUpdate(localDateTime)
                 .setCurrencyUuid(operationCUDTO.getCurrencyUuid())
-                .setCatagoryUuid(operationCUDTO.getCategoryUuid())
+                .setCategoryUuid(operationCUDTO.getCategoryUuid())
                 .setAccountEntity(byMail);
 
         return operationRepository.saveAndFlush(operationEntity);
     }
 
+    @Transactional
     @Override
     public OperationEntity update(UUID uuid, UUID uuidOperation, OperationCUDTO operationCUDTO, Long dtUpdate) {
 
@@ -104,7 +104,7 @@ public class OperationServiceImpl implements OperationService {
         OperationEntity operationEntityRes = operationEntity.get()
                 .setDate(date)
                 .setDescription(operationCUDTO.getDescription())
-                .setCatagoryUuid(operationCUDTO.getCategoryUuid())
+                .setCategoryUuid(operationCUDTO.getCategoryUuid())
                 .setValue(operationCUDTO.getValue())
                 .setCurrencyUuid(operationCUDTO.getCurrencyUuid());
 
@@ -112,13 +112,19 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public void delete(UUID uuid, UUID uuid_operation, Long dtUpdate) {
+    public void delete(UUID uuid, UUID uuidOperation, Long dtUpdate) {
+
         AccountEntity byId = accountService.getById(uuid);
-        Optional<OperationEntity> byIdAndAccountUuid = operationRepository.findByUuidAndAccountEntity(uuid, byId);
+        Optional<OperationEntity> byIdAndAccountUuid = operationRepository.findByUuidAndAccountEntity(uuidOperation, byId);
         if(byIdAndAccountUuid.isEmpty()){
             throw new IllegalArgumentException("Не существует такой операции");
         }
-        operationRepository.deleteById(byIdAndAccountUuid.get().getUuid());
+
+        Long dateTime = byIdAndAccountUuid.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
+        if(!dateTime.equals(dtUpdate)){
+            throw new IllegalArgumentException("Операция уже была Изменена");
+        }
+        operationRepository.deleteById(uuidOperation);
     }
 
 }
