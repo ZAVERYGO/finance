@@ -17,7 +17,7 @@ public interface UserService {
 
     UserEntity create(UserCUDTO userCDTO);
 
-    UserEntity update(UUID uuid, UserDTO userDTO, Long dtUpdate);
+    UserEntity update(UUID uuid, UserCUDTO userCUDTO, Long dtUpdate);
 
     boolean existsByEmail(String email);
     void delete(UUID uuid);

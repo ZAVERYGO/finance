@@ -1,6 +1,6 @@
 package com.kozich.finance.classifier_service.controller.filter;
 
-import com.kozich.finance.classifier_service.controller.feign.UserFeignClient;
+import com.kozich.finance.classifier_service.feign.client.UserFeignClient;
 import com.kozich.finance.classifier_service.controller.utils.JwtTokenHandler;
 import com.kozich.finance.classifier_service.core.dto.UserDTO;
 import jakarta.servlet.FilterChain;
@@ -27,11 +27,11 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final UserFeignClient userManager;
+    private final UserFeignClient userFeignClient;
     private final JwtTokenHandler jwtHandler;
 
     public JwtFilter(UserFeignClient userManager, JwtTokenHandler jwtHandler) {
-        this.userManager = userManager;
+        this.userFeignClient = userManager;
         this.jwtHandler = jwtHandler;
     }
 
@@ -54,8 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-
-        UserDTO myCabinet = userManager.getMyCabinet(header);
+        UserDTO myCabinet = userFeignClient.getUserByEmail(jwtHandler.getUsername(token));
 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
 

@@ -1,0 +1,10 @@
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://pg_db:5432/audit
+    username: audit_app
+    password: 123456
+
+url:
+  users: http://user-service:8080/feign

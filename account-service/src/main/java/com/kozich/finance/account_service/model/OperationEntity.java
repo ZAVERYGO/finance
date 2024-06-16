@@ -25,6 +25,7 @@ public class OperationEntity {
     @Column(name = "dt_Create")
     private LocalDateTime dtCreate;
 
+    @Version
     @Column(name = "dt_Update")
     private LocalDateTime dtUpdate;
 
@@ -32,7 +33,7 @@ public class OperationEntity {
     private UUID currencyUuid;
 
     @Column(name = "category_uuid")
-    private UUID catagoryUuid;
+    private UUID categoryUuid;
 
     @ManyToOne
     @JoinColumn(name = "account_uuid")
@@ -40,7 +41,7 @@ public class OperationEntity {
 
     public OperationEntity(UUID uuid, LocalDateTime date, String description,
                            Integer value, LocalDateTime dtCreate, LocalDateTime dtUpdate,
-                           UUID currencyUuid, UUID catagoryUuid, AccountEntity accountEntity) {
+                           UUID currencyUuid, UUID categoryUuid, AccountEntity accountEntity) {
         this.uuid = uuid;
         this.date = date;
         this.description = description;
@@ -48,14 +49,15 @@ public class OperationEntity {
         this.dtCreate = dtCreate;
         this.dtUpdate = dtUpdate;
         this.currencyUuid = currencyUuid;
-        this.catagoryUuid = catagoryUuid;
+        this.categoryUuid = categoryUuid;
         this.accountEntity = accountEntity;
     }
 
     public OperationEntity() {
     }
 
-    public UUID getUuid() {        return uuid;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public OperationEntity setUuid(UUID uuid) {
@@ -117,12 +119,12 @@ public class OperationEntity {
         return this;
     }
 
-    public UUID getCatagoryUuid() {
-        return catagoryUuid;
+    public UUID getCategoryUuid() {
+        return categoryUuid;
     }
 
-    public OperationEntity setCatagoryUuid(UUID catagoryUuid) {
-        this.catagoryUuid = catagoryUuid;
+    public OperationEntity setCategoryUuid(UUID categoryUuid) {
+        this.categoryUuid = categoryUuid;
         return this;
     }
 

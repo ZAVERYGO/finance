@@ -1,8 +1,6 @@
 package com.kozich.finance.user_service.controller.http;
 
-import com.kozich.finance.user_service.core.dto.LoginDTO;
-import com.kozich.finance.user_service.core.dto.RegistrationDTO;
-import com.kozich.finance.user_service.core.dto.UserDTO;
+import com.kozich.finance.user_service.core.dto.*;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.service.UserHolder;
@@ -16,20 +14,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneOffset;
+import java.util.UUID;
+
 @RestController
 @Validated
 @RequestMapping("/cabinet")
 public class CabinetController {
 
     private final CabinetService cabinetService;
-    private final UserHolder userHolder;
-    private final UserService userService;
     private final UserMapper userMapper;
 
-    public CabinetController(CabinetService cabinetService, UserHolder userHolder, UserService userService, UserMapper userMapper) {
+    public CabinetController(CabinetService cabinetService, UserMapper userMapper) {
         this.cabinetService = cabinetService;
-        this.userHolder = userHolder;
-        this.userService = userService;
         this.userMapper = userMapper;
     }
 
@@ -61,9 +58,7 @@ public class CabinetController {
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public UserDTO getMyCabinet(){
-
-        UserEntity userEntity = userService.getByEmail(userHolder.getUser().getUsername());
-
-        return userMapper.userEntityToUserDTO(userEntity);
+        return userMapper.userEntityToUserDTO(cabinetService.getMyCabinet());
     }
+
 }

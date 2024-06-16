@@ -9,6 +9,7 @@ import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.model.MessageEntity;
 import com.kozich.finance.user_service.model.UserEntity;
 import com.kozich.finance.user_service.model.MyUserDetails;
+import com.kozich.finance.user_service.service.UserHolder;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import com.kozich.finance.user_service.service.api.MessageService;
 import com.kozich.finance.user_service.service.api.UserService;
@@ -26,15 +27,15 @@ public class CabinetServiceImpl implements CabinetService {
 
     private final UserService userService;
     private final MessageService messageService;
-    private final UserMapper userMapper;
+    private final UserHolder userHolder;
     private final PasswordEncoder encoder;
     private final JwtTokenHandler jwtHandler;
 
-    public CabinetServiceImpl(UserService userService, MessageService messageService1,
-                              UserMapper userMapper, PasswordEncoder encoder, JwtTokenHandler jwtHandler) {
+    public CabinetServiceImpl(UserService userService, MessageService messageService1, UserHolder userHolder,
+                              PasswordEncoder encoder, JwtTokenHandler jwtHandler) {
         this.userService = userService;
         this.messageService = messageService1;
-        this.userMapper = userMapper;
+        this.userHolder = userHolder;
         this.encoder = encoder;
         this.jwtHandler = jwtHandler;
     }
@@ -71,7 +72,7 @@ public class CabinetServiceImpl implements CabinetService {
 
     @Transactional
     @Override
-    public void verifyUser(String code, String mail) {
+    public UserEntity verifyUser(String code, String mail) {
 
         UserEntity userEntity = userService.getByEmail(mail);
 
@@ -82,14 +83,17 @@ public class CabinetServiceImpl implements CabinetService {
 
         if(messageEntity.getCode().equals(code)){
 
-            UserDTO userDTO = userMapper.userEntityToUserDTO(userEntity);
-
-            userDTO.setStatus(UserStatus.ACTIVATED);
+            UserCUDTO userDTO = new UserCUDTO()
+                    .setEmail(userEntity.getEmail())
+                    .setStatus(UserStatus.ACTIVATED)
+                    .setRole(UserRole.ROLE_USER)
+                    .setFio(userEntity.getFio());
 
             long epochMilli = userEntity.getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
 
-            userService.update(userEntity.getUuid(), userDTO, epochMilli);
+            UserEntity update = userService.update(userEntity.getUuid(), userDTO, epochMilli);
 
+            return update;
         }else {
             throw new IllegalArgumentException("Неверный код верификации");
         }
@@ -118,5 +122,10 @@ public class CabinetServiceImpl implements CabinetService {
         UserDetails userDetails = new MyUserDetails(userEntity);
 
         return jwtHandler.generateAccessToken(userDetails);
+    }
+
+    @Override
+    public UserEntity getMyCabinet() {
+        return userService.getByEmail(userHolder.getUser().getUsername());
     }
 }

@@ -48,11 +48,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 // Our public endpoints
                 .requestMatchers(HttpMethod.GET,"/classifier/currency").permitAll()
-                .requestMatchers(HttpMethod.POST,"/classifier/currency").authenticated()//Обрати внимание что тут нет префикса ROLE_
-                .requestMatchers(HttpMethod.POST, "/classifier/operation/category").authenticated()  //А тут есть
+                .requestMatchers(HttpMethod.POST,"/classifier/currency").hasAnyRole("ADMIN")//Обрати внимание что тут нет префикса ROLE_
+                .requestMatchers(HttpMethod.POST, "/classifier/operation/category").hasAnyRole("ADMIN")  //А тут есть
                 .requestMatchers(HttpMethod.GET, "/classifier/operation/category").permitAll()
                 .requestMatchers(HttpMethod.GET, "/classifier/currency/{uuid}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/classifier/operation/category/{uuid}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/feign/**").permitAll()
                 // Our private endpoints
                 .anyRequest().authenticated()
         );

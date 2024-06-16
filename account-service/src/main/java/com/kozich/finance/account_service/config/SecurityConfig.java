@@ -45,6 +45,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 // Our public endpoints
                 .requestMatchers("/account/**").authenticated()
+                .requestMatchers("/feign/*").permitAll()
                 //Следующие два пример делают одно и тоже
                 // Our private endpoints
                 .anyRequest().authenticated()

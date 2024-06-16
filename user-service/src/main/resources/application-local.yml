@@ -1,0 +1,11 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user
+    username: user_app
+    password: 123456
+
+url:
+  audit: http://localhost:8087/feign

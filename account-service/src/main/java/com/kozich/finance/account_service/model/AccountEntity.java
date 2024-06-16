@@ -31,6 +31,7 @@ public class AccountEntity {
     @Column(name = "dt_Create")
     private LocalDateTime dtCreate;
 
+    @Version
     @Column(name = "dt_Update")
     private LocalDateTime dtUpdate;
 

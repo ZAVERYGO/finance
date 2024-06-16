@@ -1,12 +1,12 @@
-server:
-  port: 8083
 
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/classifier
-    username: postgres
-    password: postgres
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    open-in-view: false
+
 
 app:
   jwt:
     secret: I26tXMOZepPHyd_fDTxirlfk60dgL_P0XB8D0qhY4jI
+
