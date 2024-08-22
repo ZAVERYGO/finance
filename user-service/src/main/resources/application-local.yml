@@ -9,3 +9,4 @@ spring:
 
 url:
   audit: http://localhost:8087/feign
+

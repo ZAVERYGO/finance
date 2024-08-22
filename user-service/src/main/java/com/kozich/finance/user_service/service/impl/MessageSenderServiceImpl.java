@@ -1,21 +1,19 @@
 package com.kozich.finance.user_service.service.impl;
 
 import com.kozich.finance.user_service.service.api.MessageSenderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-import java.util.Random;
-
 @Component
 public class MessageSenderServiceImpl implements MessageSenderService {
 
     private final JavaMailSender mailSender;
+    @Value("${spring.mail.username}")
+    private String mailFrom;
 
-    @Autowired
     public MessageSenderServiceImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -23,7 +21,7 @@ public class MessageSenderServiceImpl implements MessageSenderService {
     @Override
     public void sendEmail(String toEmail, String code) throws MailSendException {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("Kozichnick@mail.ru");
+        message.setFrom(mailFrom);
         message.setTo(toEmail);
         message.setSubject("Код верификации");
         message.setText(code);
