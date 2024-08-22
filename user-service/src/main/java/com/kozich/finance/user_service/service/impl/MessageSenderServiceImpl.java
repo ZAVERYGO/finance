@@ -20,6 +20,7 @@ public class MessageSenderServiceImpl implements MessageSenderService {
 
     @Override
     public void sendEmail(String toEmail, String code) throws MailSendException {
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(mailFrom);
         message.setTo(toEmail);
@@ -28,4 +29,5 @@ public class MessageSenderServiceImpl implements MessageSenderService {
 
         mailSender.send(message);
     }
+
 }

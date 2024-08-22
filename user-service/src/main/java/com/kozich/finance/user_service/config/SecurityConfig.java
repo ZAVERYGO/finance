@@ -5,7 +5,6 @@ import com.kozich.finance.user_service.controller.filter.JwtFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,16 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception  {
-        // Enable CORS and disable CSRF
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception {
+
         http = http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable);
 
-        // Set session management to stateless
         http = http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Set unauthorized requests exception handler
         http = http
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(
                         (request, response, ex) -> {
@@ -42,21 +39,18 @@ public class SecurityConfig {
                     );
                 }));
 
-        // Set permissions on endpoints
         http.authorizeHttpRequests(requests -> requests
-                // Our public endpoints
-                .requestMatchers( "/users/**").hasAnyRole("ADMIN")
-                //Следующие два пример делают одно и тоже
-                .requestMatchers("/cabinet/registration").permitAll() //Обрати внимание что тут нет префикса ROLE_
-                .requestMatchers("/cabinet/verification").permitAll()  //А тут есть
+                .requestMatchers("/users/**").hasAnyRole("ADMIN")
+                .requestMatchers("/cabinet/registration").permitAll()
+                .requestMatchers("/cabinet/verification").permitAll()
                 .requestMatchers("/cabinet/login").permitAll()
                 .requestMatchers("/cabinet/me").authenticated()
                 .requestMatchers("/feign/*").permitAll()
-                // Our private endpoints
+
                 .anyRequest().authenticated()
         );
 
-        // Add JWT token filter
+
         http.addFilterBefore(
                 filter,
                 UsernamePasswordAuthenticationFilter.class
@@ -64,4 +58,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

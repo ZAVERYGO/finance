@@ -1,19 +1,17 @@
 package com.kozich.finance.user_service.feign.aspect;
 
-import com.kozich.finance.user_service.core.AuditType;
+import com.kozich.finance.user_service.core.enums.AuditType;
 import com.kozich.finance.user_service.core.dto.AuditCUDTO;
 import com.kozich.finance.user_service.core.dto.UserAuditDTO;
 import com.kozich.finance.user_service.feign.client.AuditFeignClient;
-import com.kozich.finance.user_service.model.UserEntity;
-import com.kozich.finance.user_service.service.UserHolder;
+import com.kozich.finance.user_service.entity.UserEntity;
+import com.kozich.finance.user_service.security.UserHolder;
 import com.kozich.finance.user_service.service.api.UserService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Aspect
 @Component
@@ -30,7 +28,6 @@ public class AuditUserAspect {
 
     public AuditUserAspect(AuditFeignClient auditServiceFeignClient,
                            UserHolder userHolder, UserService userService) {
-
         this.auditServiceFeignClient = auditServiceFeignClient;
         this.userHolder = userHolder;
         this.userService = userService;
@@ -43,11 +40,8 @@ public class AuditUserAspect {
         if (!className.equals("com.kozich.finance.user_service.controller.http.UserController")) {
             return;
         }
-
         UserAuditDTO userAuditDTO = getUserAudit();
-
         AuditCUDTO audit = getAuditCUDTO(TEXT_CREATE, userAuditDTO, entity.getUuid().toString());
-
         this.auditServiceFeignClient.create(audit);
     }
 
@@ -58,11 +52,8 @@ public class AuditUserAspect {
         if (!className.equals("com.kozich.finance.user_service.controller.http.UserController")) {
             return;
         }
-
         UserAuditDTO userAuditDTO = getUserAudit();
-
         AuditCUDTO audit = getAuditCUDTO(TEXT_GET_ALL, userAuditDTO, String.valueOf(page.hashCode()));
-
         this.auditServiceFeignClient.create(audit);
     }
 
@@ -73,11 +64,8 @@ public class AuditUserAspect {
         if (!className.equals("com.kozich.finance.user_service.controller.http.UserController")) {
             return;
         }
-
         UserAuditDTO userAuditDTO = getUserAudit();
-
         AuditCUDTO audit = getAuditCUDTO(TEXT_GET_BY_ID, userAuditDTO, user.getUuid().toString());
-
         this.auditServiceFeignClient.create(audit);
     }
 
@@ -88,16 +76,12 @@ public class AuditUserAspect {
         if (!className.equals("com.kozich.finance.user_service.controller.http.UserController")) {
             return;
         }
-
         UserAuditDTO userAuditDTO = getUserAudit();
-
         AuditCUDTO audit = getAuditCUDTO(TEXT_UPDATE, userAuditDTO, user.getUuid().toString());
-
         this.auditServiceFeignClient.create(audit);
     }
 
     private UserAuditDTO getUserAudit() {
-
 
         UserEntity userEntity = userService.getByEmail(userHolder.getUser().getUsername());
 
@@ -120,4 +104,5 @@ public class AuditUserAspect {
 
         return auditCUDTO;
     }
+
 }

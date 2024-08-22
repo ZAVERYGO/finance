@@ -1,9 +1,9 @@
 package com.kozich.finance.user_service.scheduling.job;
 
-import com.kozich.finance.user_service.core.MessageStatus;
+import com.kozich.finance.user_service.core.enums.MessageStatus;
 import com.kozich.finance.user_service.core.dto.MessageDTO;
 import com.kozich.finance.user_service.mapper.MessageMapper;
-import com.kozich.finance.user_service.model.MessageEntity;
+import com.kozich.finance.user_service.entity.MessageEntity;
 import com.kozich.finance.user_service.service.api.MessageSenderService;
 import com.kozich.finance.user_service.service.api.MessageService;
 import org.springframework.mail.MailSendException;
@@ -25,6 +25,7 @@ public class MessageSendJob {
     }
 
     public void start() {
+
         List<MessageEntity> allByStatus = messageService.getAllByStatus(MessageStatus.LOADED);
 
         if (allByStatus == null) {
@@ -44,4 +45,5 @@ public class MessageSendJob {
             }
         }
     }
+
 }

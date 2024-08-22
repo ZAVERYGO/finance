@@ -16,22 +16,23 @@ public class AsyncConfig implements AsyncConfigurer {
 
     @Value("${async.executor.corePoolSize}")
     private int corePoolSize;
-
     @Value("${async.executor.maxPoolSize}")
     private int maxPoolSize;
-
     @Value("${async.executor.queueCapacity}")
     private int queueCapacity;
 
     @Override
     @Bean(name = "taskExecutor")
     public Executor getAsyncExecutor() {
+
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
         executor.setThreadNamePrefix("Async-Thread-");
         executor.initialize();
+
         return executor;
     }
+
 }

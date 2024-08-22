@@ -1,9 +1,9 @@
 package com.kozich.finance.user_service.service.impl;
 
-import com.kozich.finance.user_service.core.MessageStatus;
+import com.kozich.finance.user_service.core.enums.MessageStatus;
 import com.kozich.finance.user_service.core.dto.MessageDTO;
-import com.kozich.finance.user_service.model.MessageEntity;
-import com.kozich.finance.user_service.model.UserEntity;
+import com.kozich.finance.user_service.entity.MessageEntity;
+import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.repository.MessageRepository;
 import com.kozich.finance.user_service.service.api.MessageService;
 import com.kozich.finance.user_service.service.api.UserService;
@@ -46,17 +46,13 @@ public class MessageServiceImpl implements MessageService {
                 .setStatus(messageDTO.getStatus())
                 .setCode(messageDTO.getCode());
 
-        return  messageRepository.saveAndFlush(messageEntity);
-    }
-
-    @Override
-    public MessageEntity getById(UUID uuid) {
-        return messageRepository.findById(uuid).get();
+        return messageRepository.saveAndFlush(messageEntity);
     }
 
     @Override
     public MessageEntity getByUser(UserEntity userEntity) {
-        return messageRepository.findByUserUuid(userEntity).orElseThrow(() -> new IllegalArgumentException("Не существует пользователя"));
+        return messageRepository.findByUserUuid(userEntity)
+                .orElseThrow(() -> new IllegalArgumentException("Не существует пользователя"));
     }
 
     @Transactional
@@ -66,12 +62,13 @@ public class MessageServiceImpl implements MessageService {
         UserEntity userEntity = userService.getByEmail(messageDTO.getEmail());
         Optional<MessageEntity> messageEntity = messageRepository.findByUserUuid(userEntity);
         MessageEntity message = messageEntity.orElseThrow(() -> new IllegalArgumentException("Не существует сообщения"));
-        if(messageDTO.getCode() != null){
+
+        if (messageDTO.getCode() != null) {
             message.setCode(messageDTO.getCode());
         }
-            message.setStatus(messageDTO.getStatus());
 
-        return messageRepository.saveAndFlush(message);
+        return messageRepository.saveAndFlush(message.setStatus(messageDTO.getStatus()));
     }
+
 }
 

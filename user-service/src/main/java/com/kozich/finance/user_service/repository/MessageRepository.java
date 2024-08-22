@@ -1,8 +1,8 @@
 package com.kozich.finance.user_service.repository;
 
-import com.kozich.finance.user_service.core.MessageStatus;
-import com.kozich.finance.user_service.model.MessageEntity;
-import com.kozich.finance.user_service.model.UserEntity;
+import com.kozich.finance.user_service.core.enums.MessageStatus;
+import com.kozich.finance.user_service.entity.MessageEntity;
+import com.kozich.finance.user_service.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
