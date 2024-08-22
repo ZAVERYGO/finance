@@ -1,4 +1,4 @@
-package com.kozich.finance.user_service.service.job;
+package com.kozich.finance.user_service.scheduling.job;
 
 import com.kozich.finance.user_service.core.MessageStatus;
 import com.kozich.finance.user_service.core.dto.MessageDTO;
@@ -6,7 +6,6 @@ import com.kozich.finance.user_service.mapper.MessageMapper;
 import com.kozich.finance.user_service.model.MessageEntity;
 import com.kozich.finance.user_service.service.api.MessageSenderService;
 import com.kozich.finance.user_service.service.api.MessageService;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ public class MessageSendJob {
 
     private final MessageSenderService messageSender;
     private final MessageService messageService;
-
     private final MessageMapper messageMapper;
 
     public MessageSendJob(MessageSenderService messageSenderService, MessageService messageService, MessageMapper messageMapper) {
@@ -26,21 +24,20 @@ public class MessageSendJob {
         this.messageMapper = messageMapper;
     }
 
-    public void start(){
-
+    public void start() {
         List<MessageEntity> allByStatus = messageService.getAllByStatus(MessageStatus.LOADED);
 
-        if(allByStatus == null){
+        if (allByStatus == null) {
             return;
         }
-        for (MessageEntity mail : allByStatus) {
 
+        for (MessageEntity mail : allByStatus) {
             try {
                 messageSender.sendEmail(mail.getUserUuid().getEmail(), mail.getCode());
                 MessageDTO messageDTO = messageMapper.messageEntityTOMessageDTO(mail);
                 messageDTO.setStatus(MessageStatus.OK);
                 messageService.update(messageDTO);
-            }catch (MailSendException e){
+            } catch (MailSendException e) {
                 MessageDTO messageDTO = messageMapper.messageEntityTOMessageDTO(mail);
                 messageDTO.setStatus(MessageStatus.ERROR);
                 messageService.update(messageDTO);
