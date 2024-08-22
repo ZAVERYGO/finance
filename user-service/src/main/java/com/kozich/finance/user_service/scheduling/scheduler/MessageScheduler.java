@@ -22,4 +22,5 @@ public class MessageScheduler {
     public void scheduleFixedRate() {
         messageSendJob.start();
     }
+
 }

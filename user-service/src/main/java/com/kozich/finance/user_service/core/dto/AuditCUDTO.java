@@ -1,15 +1,11 @@
 package com.kozich.finance.user_service.core.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kozich.finance.user_service.core.AuditType;
-import com.kozich.finance.user_service.core.UserRole;
+import com.kozich.finance.user_service.core.enums.AuditType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +21,5 @@ public class AuditCUDTO {
     private AuditType type;
 
     private String id;
+
 }

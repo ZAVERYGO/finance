@@ -1,8 +1,8 @@
 package com.kozich.finance.user_service.controller.filter;
 
 import com.kozich.finance.user_service.controller.utils.JwtTokenHandler;
-import com.kozich.finance.user_service.model.UserEntity;
-import com.kozich.finance.user_service.model.MyUserDetails;
+import com.kozich.finance.user_service.entity.UserEntity;
+import com.kozich.finance.user_service.security.MyUserDetails;
 import com.kozich.finance.user_service.service.api.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,7 +22,6 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-
 
     private final UserService userService;
     private final JwtTokenHandler jwtHandler;
@@ -44,14 +43,12 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
         if (!jwtHandler.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Get user identity and set it on the spring security context
         UserEntity userEntity = userService.getByEmail(jwtHandler.getUsername(token));
 
         MyUserDetails userDetails = new MyUserDetails(userEntity);
@@ -70,4 +67,5 @@ public class JwtFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
+
 }

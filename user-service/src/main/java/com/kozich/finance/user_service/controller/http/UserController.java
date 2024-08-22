@@ -4,7 +4,7 @@ import com.kozich.finance.user_service.core.dto.PageUserDTO;
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
-import com.kozich.finance.user_service.model.UserEntity;
+import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.service.api.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -33,17 +33,15 @@ public class UserController {
 
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO getById(@PathVariable(value = "uuid") UUID uuid){
-
+    public UserDTO getById(@PathVariable(value = "uuid") UUID uuid) {
         UserEntity userEntity = userService.getById(uuid);
-
         return userMapper.userEntityToUserDTO(userEntity);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PageUserDTO getPage(@PositiveOrZero @RequestParam(value = "page", defaultValue = "0") Integer page,
-                               @Positive @RequestParam(value = "size", defaultValue = "20") Integer size){
+                               @Positive @RequestParam(value = "size", defaultValue = "20") Integer size) {
 
         Page<UserEntity> pageEntity = userService.getPage(page, size);
 
@@ -69,7 +67,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody UserCUDTO userCDTO){
+    public void create(@Valid @RequestBody UserCUDTO userCDTO) {
         userService.create(userCDTO);
     }
 
@@ -77,7 +75,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void update(@RequestBody UserCUDTO userCDTO,
                        @PathVariable(value = "uuid") UUID uuid,
-                       @PathVariable(value = "dt_update") Long dtUpdate){
+                       @PathVariable(value = "dt_update") Long dtUpdate) {
         userService.update(uuid, userCDTO, dtUpdate);
     }
 

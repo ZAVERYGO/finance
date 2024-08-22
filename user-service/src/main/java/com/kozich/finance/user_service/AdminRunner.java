@@ -1,7 +1,7 @@
 package com.kozich.finance.user_service;
 
-import com.kozich.finance.user_service.core.UserRole;
-import com.kozich.finance.user_service.core.UserStatus;
+import com.kozich.finance.user_service.core.enums.UserRole;
+import com.kozich.finance.user_service.core.enums.UserStatus;
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.service.api.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,8 @@ public class AdminRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if(userService.existsByEmail(email)){
+
+        if (userService.existsByEmail(email)) {
             return;
         }
 
@@ -37,4 +38,5 @@ public class AdminRunner implements CommandLineRunner {
                 .setEmail(email)
                 .setPassword(password));
     }
+
 }

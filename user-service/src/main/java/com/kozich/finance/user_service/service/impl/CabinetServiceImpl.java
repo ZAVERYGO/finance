@@ -1,15 +1,14 @@
 package com.kozich.finance.user_service.service.impl;
 
 import com.kozich.finance.user_service.controller.utils.JwtTokenHandler;
-import com.kozich.finance.user_service.core.MessageStatus;
-import com.kozich.finance.user_service.core.UserRole;
-import com.kozich.finance.user_service.core.UserStatus;
+import com.kozich.finance.user_service.core.enums.MessageStatus;
+import com.kozich.finance.user_service.core.enums.UserRole;
+import com.kozich.finance.user_service.core.enums.UserStatus;
 import com.kozich.finance.user_service.core.dto.*;
-import com.kozich.finance.user_service.mapper.UserMapper;
-import com.kozich.finance.user_service.model.MessageEntity;
-import com.kozich.finance.user_service.model.UserEntity;
-import com.kozich.finance.user_service.model.MyUserDetails;
-import com.kozich.finance.user_service.service.UserHolder;
+import com.kozich.finance.user_service.entity.MessageEntity;
+import com.kozich.finance.user_service.entity.UserEntity;
+import com.kozich.finance.user_service.security.MyUserDetails;
+import com.kozich.finance.user_service.security.UserHolder;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import com.kozich.finance.user_service.service.api.MessageService;
 import com.kozich.finance.user_service.service.api.UserService;
@@ -44,7 +43,7 @@ public class CabinetServiceImpl implements CabinetService {
     @Override
     public UserEntity registerUser(RegistrationDTO registrationDTO) {
 
-        if(userService.existsByEmail(registrationDTO.getEmail())){
+        if (userService.existsByEmail(registrationDTO.getEmail())) {
             throw new IllegalArgumentException("Логин уже занят. Введите другой");
         }
 
@@ -76,13 +75,13 @@ public class CabinetServiceImpl implements CabinetService {
 
         UserEntity userEntity = userService.getByEmail(mail);
 
-        if(userEntity.getStatus().equals(UserStatus.ACTIVATED)){
+        if (userEntity.getStatus().equals(UserStatus.ACTIVATED)) {
             throw new IllegalArgumentException("Пользователь уже верифицирован");
         }
+
         MessageEntity messageEntity = messageService.getByUser(userEntity);
 
-        if(messageEntity.getCode().equals(code)){
-
+        if (messageEntity.getCode().equals(code)) {
             UserCUDTO userDTO = new UserCUDTO()
                     .setEmail(userEntity.getEmail())
                     .setStatus(UserStatus.ACTIVATED)
@@ -91,10 +90,8 @@ public class CabinetServiceImpl implements CabinetService {
 
             long epochMilli = userEntity.getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
 
-            UserEntity update = userService.update(userEntity.getUuid(), userDTO, epochMilli);
-
-            return update;
-        }else {
+            return userService.update(userEntity.getUuid(), userDTO, epochMilli);
+        } else {
             throw new IllegalArgumentException("Неверный код верификации");
         }
     }
@@ -104,18 +101,19 @@ public class CabinetServiceImpl implements CabinetService {
 
         String email = loginDTO.getEmail();
         UserEntity userEntity;
-        if(userService.existsByEmail(email)){
+
+        if (userService.existsByEmail(email)) {
             userEntity = userService.getByEmail(email);
-            if(!userEntity.getStatus().equals(UserStatus.ACTIVATED)){
+            if (!userEntity.getStatus().equals(UserStatus.ACTIVATED)) {
                 throw new IllegalArgumentException("Вы не прошли верификацию");
             }
-        }else{
+        } else {
             throw new IllegalArgumentException("Неверный логин или пароль");
         }
 
         String passwordDTO = loginDTO.getPassword();
         String passwordEntity = userEntity.getPassword();
-        if(!encoder.matches(passwordDTO, passwordEntity)){
+        if (!encoder.matches(passwordDTO, passwordEntity)) {
             throw new IllegalArgumentException("Неверный логин или пароль");
         }
 
@@ -128,4 +126,5 @@ public class CabinetServiceImpl implements CabinetService {
     public UserEntity getMyCabinet() {
         return userService.getByEmail(userHolder.getUser().getUsername());
     }
+
 }

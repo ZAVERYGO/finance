@@ -1,7 +1,7 @@
-package com.kozich.finance.user_service.model;
+package com.kozich.finance.user_service.entity;
 
-import com.kozich.finance.user_service.core.UserRole;
-import com.kozich.finance.user_service.core.UserStatus;
+import com.kozich.finance.user_service.core.enums.UserRole;
+import com.kozich.finance.user_service.core.enums.UserStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -42,7 +42,7 @@ public class UserEntity {
     @OneToOne(mappedBy = "userUuid")
     private MessageEntity messageEntity;
 
-        public UserEntity() {
+    public UserEntity() {
     }
 
     public UserEntity(UUID uuid, String email, String fio, UserRole role, UserStatus status,

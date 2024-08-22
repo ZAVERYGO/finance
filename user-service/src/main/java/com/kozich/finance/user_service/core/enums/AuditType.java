@@ -1,4 +1,4 @@
-package com.kozich.finance.user_service.core;
+package com.kozich.finance.user_service.core.enums;
 
 public enum AuditType {
     USER,
@@ -7,6 +7,5 @@ public enum AuditType {
     CATEGORY,
     CURRENCY,
     ACCOUNT
-
 
 }
