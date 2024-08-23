@@ -1,7 +1,7 @@
 package com.kozich.finance.classifier_service.service.impl;
 
 import com.kozich.finance.classifier_service.core.dto.CategoryDTO;
-import com.kozich.finance.classifier_service.model.CategoryEntity;
+import com.kozich.finance.classifier_service.entity.CategoryEntity;
 import com.kozich.finance.classifier_service.repository.CategoryRepository;
 import com.kozich.finance.classifier_service.service.api.CategoryService;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryEntity create(CategoryDTO categoryDTO) {
 
-        if(categoryRepository.findByTitle(categoryDTO.getTitle()).isPresent()){
+        if (categoryRepository.findByTitle(categoryDTO.getTitle()).isPresent()) {
             throw new IllegalArgumentException("Категория уже существует");
         }
 

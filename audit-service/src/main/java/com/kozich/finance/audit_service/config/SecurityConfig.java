@@ -19,16 +19,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception  {
-        // Enable CORS and disable CSRF
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception {
+
         http = http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable);
 
-        // Set session management to stateless
+
         http = http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Set unauthorized requests exception handler
+
         http = http
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(
                         (request, response, ex) -> {
@@ -42,17 +42,16 @@ public class SecurityConfig {
                     );
                 }));
 
-        // Set permissions on endpoints
+
         http.authorizeHttpRequests(requests -> requests
-                // Our public endpoints
-                //Следующие два пример делают одно и тоже
-                .requestMatchers("/audit/*").hasAnyRole("ADMIN") //Обрати внимание что тут нет префикса ROLE_
-                .requestMatchers(HttpMethod.POST, "/feign").permitAll() //Обрати внимание что тут нет префикса ROLE_//Обрати внимание что тут нет префикса ROLE_
-                // Our private endpoints
+
+                .requestMatchers("/audit/*").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/feign").permitAll()
+
                 .anyRequest().authenticated()
         );
 
-        // Add JWT token filter
+
         http.addFilterBefore(
                 filter,
                 UsernamePasswordAuthenticationFilter.class

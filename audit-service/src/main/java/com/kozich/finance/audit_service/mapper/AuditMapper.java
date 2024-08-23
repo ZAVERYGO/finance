@@ -1,7 +1,7 @@
 package com.kozich.finance.audit_service.mapper;
 
 import com.kozich.finance.audit_service.core.dto.AuditDTO;
-import com.kozich.finance.audit_service.model.AuditEntity;
+import com.kozich.finance.audit_service.entity.AuditEntity;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

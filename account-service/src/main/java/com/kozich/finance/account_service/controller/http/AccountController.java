@@ -4,9 +4,8 @@ import com.kozich.finance.account_service.core.dto.AccountCUDTO;
 import com.kozich.finance.account_service.core.dto.AccountDTO;
 import com.kozich.finance.account_service.core.dto.PageAccountDTO;
 import com.kozich.finance.account_service.mapper.AccountMapper;
-import com.kozich.finance.account_service.model.AccountEntity;
-import com.kozich.finance.account_service.model.OperationEntity;
-import com.kozich.finance.account_service.service.UserHolder;
+import com.kozich.finance.account_service.entity.AccountEntity;
+import com.kozich.finance.account_service.config.user_info.UserHolder;
 import com.kozich.finance.account_service.service.api.AccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -28,7 +27,6 @@ public class AccountController {
 
     private final AccountService accountService;
     private final AccountMapper accountMapper;
-
     private final UserHolder userHolder;
 
     public AccountController(AccountService accountService, AccountMapper accountMapper, UserHolder userHolder) {
@@ -39,16 +37,14 @@ public class AccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody AccountCUDTO accountCUDTO){
-
+    public void create(@Valid @RequestBody AccountCUDTO accountCUDTO) {
         accountService.create(accountCUDTO);
-
     }
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public PageAccountDTO getPage(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
-                                  @NonNull @Positive @RequestParam(value = "size") Integer size){
+                                  @NonNull @Positive @RequestParam(value = "size") Integer size) {
 
         Page<AccountEntity> pageEntity = accountService.getPage(page, size);
         PageAccountDTO pageAccountDTO = new PageAccountDTO()
@@ -67,13 +63,11 @@ public class AccountController {
             contentDTO.add(accountMapper.accountEntityToAccountDTO(accountEntity));
         }
         return pageAccountDTO.setContent(contentDTO);
-
     }
 
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDTO get(@PathVariable(name = "uuid") UUID uuid){
-
+    public AccountDTO get(@PathVariable(name = "uuid") UUID uuid) {
         AccountEntity byId = accountService.getByUuidAndEmail(uuid, userHolder.getUser().getUsername());
         return accountMapper.accountEntityToAccountDTO(byId);
     }
@@ -81,10 +75,8 @@ public class AccountController {
     @PutMapping("/{uuid}/dt_update/{dt_update}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable(value = "uuid") UUID uuid,
-                                           @PathVariable(value = "dt_update") Long dtUpdate,
-                                           @Valid @RequestBody AccountCUDTO accountCUDTO){
-
+                       @PathVariable(value = "dt_update") Long dtUpdate,
+                       @Valid @RequestBody AccountCUDTO accountCUDTO) {
         accountService.update(uuid, accountCUDTO, dtUpdate);
-
     }
 }

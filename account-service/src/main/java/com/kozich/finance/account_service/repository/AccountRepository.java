@@ -1,7 +1,6 @@
 package com.kozich.finance.account_service.repository;
 
-import com.kozich.finance.account_service.model.AccountEntity;
-import jakarta.validation.constraints.Email;
+import com.kozich.finance.account_service.entity.AccountEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +17,5 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID> {
     Page<AccountEntity> findAllByEmail(PageRequest pageRequest, String mail);
 
     Optional<AccountEntity> findByUuidAndEmail(UUID uuid, String mail);
+
 }

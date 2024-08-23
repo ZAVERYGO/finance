@@ -1,8 +1,8 @@
 package com.kozich.finance.user_service.controller.filter;
 
+import com.kozich.finance.user_service.config.user_info.MyUserDetails;
 import com.kozich.finance.user_service.controller.utils.JwtTokenHandler;
 import com.kozich.finance.user_service.entity.UserEntity;
-import com.kozich.finance.user_service.security.MyUserDetails;
 import com.kozich.finance.user_service.service.api.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

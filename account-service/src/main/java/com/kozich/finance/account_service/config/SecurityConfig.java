@@ -18,16 +18,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception  {
-        // Enable CORS and disable CSRF
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter filter) throws Exception {
+
         http = http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable);
 
-        // Set session management to stateless
+
         http = http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Set unauthorized requests exception handler
+
         http = http
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(
                         (request, response, ex) -> {
@@ -41,17 +41,16 @@ public class SecurityConfig {
                     );
                 }));
 
-        // Set permissions on endpoints
+
         http.authorizeHttpRequests(requests -> requests
-                // Our public endpoints
+
                 .requestMatchers("/account/**").authenticated()
                 .requestMatchers("/feign/*").permitAll()
-                //Следующие два пример делают одно и тоже
-                // Our private endpoints
+
                 .anyRequest().authenticated()
         );
 
-        // Add JWT token filter
+
         http.addFilterBefore(
                 filter,
                 UsernamePasswordAuthenticationFilter.class

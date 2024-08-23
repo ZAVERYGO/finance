@@ -1,7 +1,7 @@
 package com.kozich.finance.account_service.mapper;
 
 import com.kozich.finance.account_service.core.dto.OperationDTO;
-import com.kozich.finance.account_service.model.OperationEntity;
+import com.kozich.finance.account_service.entity.OperationEntity;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,6 +33,7 @@ public interface OperationMapper {
     @Mapping(target = "dtUpdate", qualifiedByName = "mapLocalDateTimeToLong", source = "dtUpdate")
     @Mapping(target = "date", qualifiedByName = "mapLocalDateTimeToLong", source = "date")
     OperationDTO operationEntityToOperationDTO(OperationEntity userEntity);
+
     @Named("mapLocalDateTimeToLong")
     default Long mapLocalDateTimeToLong(LocalDateTime dateTime) {
         if (dateTime == null) {

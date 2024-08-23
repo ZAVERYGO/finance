@@ -4,14 +4,13 @@ import com.kozich.finance.classifier_service.core.dto.CategoryDTO;
 import com.kozich.finance.classifier_service.core.dto.CurrencyDTO;
 import com.kozich.finance.classifier_service.core.dto.PageCategoryDTO;
 import com.kozich.finance.classifier_service.core.dto.PageCurrencyDTO;
+import com.kozich.finance.classifier_service.entity.CategoryEntity;
+import com.kozich.finance.classifier_service.entity.CurrencyEntity;
 import com.kozich.finance.classifier_service.mapper.CategoryMapper;
 import com.kozich.finance.classifier_service.mapper.CurrencyMapper;
-import com.kozich.finance.classifier_service.model.CategoryEntity;
-import com.kozich.finance.classifier_service.model.CurrencyEntity;
 import com.kozich.finance.classifier_service.service.api.CategoryService;
 import com.kozich.finance.classifier_service.service.api.CurrencyService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -45,16 +43,14 @@ public class ClassifierController {
 
     @PostMapping("/currency")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody CurrencyDTO currencyDTO){
-
+    public void create(@Valid @RequestBody CurrencyDTO currencyDTO) {
         currencyService.create(currencyDTO);
-
     }
 
     @GetMapping("/currency")
     @ResponseStatus(HttpStatus.OK)
     public PageCurrencyDTO getPageCurrency(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
-                                           @NonNull @Positive @RequestParam(value = "size") Integer size){
+                                           @NonNull @Positive @RequestParam(value = "size") Integer size) {
 
         Page<CurrencyEntity> pageEntity = currencyService.getPage(page, size);
 
@@ -80,16 +76,14 @@ public class ClassifierController {
 
     @PostMapping("/operation/category")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody CategoryDTO categoryDTO){
-
+    public void create(@Valid @RequestBody CategoryDTO categoryDTO) {
         categoryService.create(categoryDTO);
-
     }
 
     @GetMapping("/operation/category")
     @ResponseStatus(HttpStatus.OK)
     public PageCategoryDTO getPageCategory(@NotNull @PositiveOrZero @RequestParam(value = "page") Integer page,
-                                           @NotNull @Positive @RequestParam(value = "size") Integer size){
+                                           @NotNull @Positive @RequestParam(value = "size") Integer size) {
 
         Page<CategoryEntity> pageEntity = categoryService.getPage(page, size);
 
@@ -112,7 +106,5 @@ public class ClassifierController {
         return pageCategoryDTO.setContent(contentDTO);
 
     }
-
-
 
 }

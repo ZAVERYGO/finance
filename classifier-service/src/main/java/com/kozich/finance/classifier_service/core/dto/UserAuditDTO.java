@@ -1,6 +1,6 @@
 package com.kozich.finance.classifier_service.core.dto;
 
-import com.kozich.finance.classifier_service.core.UserRole;
+import com.kozich.finance.classifier_service.core.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

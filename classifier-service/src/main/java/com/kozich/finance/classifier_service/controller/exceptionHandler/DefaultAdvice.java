@@ -15,21 +15,21 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class DefaultAdvice {
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class,
-                       HttpMessageNotReadableException.class , ValueInstantiationException.class,
-                       MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<ErrorResponse> validaException(Exception e){
+            HttpMessageNotReadableException.class, ValueInstantiationException.class,
+            MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ErrorResponse> validaException(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse("error", "Запрос содержит некорректные данные. Измените запрос и отправьте его ещё раз");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<ErrorResponse> illegalArgException(Exception e){
+    public ResponseEntity<ErrorResponse> illegalArgException(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse("error", e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<ErrorResponse> exception(Exception e){
+    public ResponseEntity<ErrorResponse> exception(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse("error", "Сервер не смог корректно обработать запрос. Пожалуйста обратитесь к администратору");
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -1,7 +1,7 @@
 package com.kozich.finance.classifier_service.mapper;
 
 import com.kozich.finance.classifier_service.core.dto.CategoryDTO;
-import com.kozich.finance.classifier_service.model.CategoryEntity;
+import com.kozich.finance.classifier_service.entity.CategoryEntity;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

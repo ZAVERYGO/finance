@@ -1,8 +1,8 @@
 package com.kozich.finance.user_service;
 
+import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.enums.UserRole;
 import com.kozich.finance.user_service.core.enums.UserStatus;
-import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.service.api.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class AdminRunner implements CommandLineRunner {
 
     private final UserService userService;
-    @Value("${admin.name}")
+    @Value("${admin.fio}")
     private String fio;
     @Value("${admin.email}")
     private String email;

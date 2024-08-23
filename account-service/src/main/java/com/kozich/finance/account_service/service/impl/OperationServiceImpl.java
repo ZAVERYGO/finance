@@ -1,11 +1,11 @@
 package com.kozich.finance.account_service.service.impl;
 
-import com.kozich.finance.account_service.feign.client.ClassifierFeignClient;
+import com.kozich.finance.account_service.controller.feign.client.ClassifierFeignClient;
 import com.kozich.finance.account_service.core.dto.*;
-import com.kozich.finance.account_service.model.OperationEntity;
-import com.kozich.finance.account_service.model.AccountEntity;
+import com.kozich.finance.account_service.entity.OperationEntity;
+import com.kozich.finance.account_service.entity.AccountEntity;
 import com.kozich.finance.account_service.repository.OperationRepository;
-import com.kozich.finance.account_service.service.UserHolder;
+import com.kozich.finance.account_service.config.user_info.UserHolder;
 import com.kozich.finance.account_service.service.api.AccountService;
 import com.kozich.finance.account_service.service.api.OperationService;
 import feign.FeignException;
@@ -30,7 +30,8 @@ public class OperationServiceImpl implements OperationService {
     private final UserHolder userHolder;
     private final AccountService accountService;
 
-    public OperationServiceImpl(OperationRepository operationRepository, ClassifierFeignClient classifierFeignClient, UserHolder userHolder, AccountService accountService) {
+    public OperationServiceImpl(OperationRepository operationRepository, ClassifierFeignClient classifierFeignClient,
+                                UserHolder userHolder, AccountService accountService) {
         this.operationRepository = operationRepository;
         this.classifierFeignClient = classifierFeignClient;
         this.userHolder = userHolder;
@@ -39,7 +40,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public OperationEntity getById(UUID uuid) {
-        return null;
+        return operationRepository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Нет такой операции"));
     }
 
     @Override
@@ -57,8 +58,8 @@ public class OperationServiceImpl implements OperationService {
         try {
             classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
             classifierFeignClient.getCurrencyById(operationCUDTO.getCurrencyUuid());
-        }catch (FeignException e){
-            throw  new IllegalArgumentException("Не сущесвует указанной валюты или счета");
+        } catch (FeignException e) {
+            throw new IllegalArgumentException("Не сущесвует указанной валюты или счета");
         }
 
         AccountEntity byMail = accountService.getByMail(userHolder.getUser().getUsername());
@@ -88,15 +89,15 @@ public class OperationServiceImpl implements OperationService {
         try {
             classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
             classifierFeignClient.getCurrencyById(operationCUDTO.getCurrencyUuid());
-        }catch (FeignException e){
-            throw  new IllegalArgumentException("Не сущесвует указанной валюты или счета");
+        } catch (FeignException e) {
+            throw new IllegalArgumentException("Не сущесвует указанной валюты или счета");
         }
 
-        if(operationEntity.isEmpty()){
+        if (operationEntity.isEmpty()) {
             throw new IllegalArgumentException("Операции не существует");
         }
         Long dateTime = operationEntity.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
-        if(!dateTime.equals(dtUpdate)){
+        if (!dateTime.equals(dtUpdate)) {
             throw new IllegalArgumentException("Операция уже была изменена");
         }
 
@@ -116,12 +117,12 @@ public class OperationServiceImpl implements OperationService {
 
         AccountEntity byId = accountService.getById(uuid);
         Optional<OperationEntity> byIdAndAccountUuid = operationRepository.findByUuidAndAccountEntity(uuidOperation, byId);
-        if(byIdAndAccountUuid.isEmpty()){
+        if (byIdAndAccountUuid.isEmpty()) {
             throw new IllegalArgumentException("Не существует такой операции");
         }
 
         Long dateTime = byIdAndAccountUuid.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
-        if(!dateTime.equals(dtUpdate)){
+        if (!dateTime.equals(dtUpdate)) {
             throw new IllegalArgumentException("Операция уже была Изменена");
         }
         operationRepository.deleteById(uuidOperation);

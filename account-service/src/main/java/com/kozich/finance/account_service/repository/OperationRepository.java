@@ -1,7 +1,7 @@
 package com.kozich.finance.account_service.repository;
 
-import com.kozich.finance.account_service.model.AccountEntity;
-import com.kozich.finance.account_service.model.OperationEntity;
+import com.kozich.finance.account_service.entity.AccountEntity;
+import com.kozich.finance.account_service.entity.OperationEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +16,5 @@ public interface OperationRepository extends JpaRepository<OperationEntity, UUID
     Page<OperationEntity>  findAllByAccountEntity(PageRequest pageRequest, AccountEntity accountEntity);
 
     Optional<OperationEntity> findByUuidAndAccountEntity(UUID uuidOperation, AccountEntity accountEntity);
+
 }

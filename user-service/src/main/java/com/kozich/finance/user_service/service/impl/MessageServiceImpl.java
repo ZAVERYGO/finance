@@ -1,7 +1,7 @@
 package com.kozich.finance.user_service.service.impl;
 
-import com.kozich.finance.user_service.core.enums.MessageStatus;
 import com.kozich.finance.user_service.core.dto.MessageDTO;
+import com.kozich.finance.user_service.core.enums.MessageStatus;
 import com.kozich.finance.user_service.entity.MessageEntity;
 import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.repository.MessageRepository;

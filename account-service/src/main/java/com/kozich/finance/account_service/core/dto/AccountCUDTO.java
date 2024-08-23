@@ -1,8 +1,7 @@
 package com.kozich.finance.account_service.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kozich.finance.account_service.core.AccountType;
-import jakarta.persistence.*;
+import com.kozich.finance.account_service.core.enums.AccountType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor

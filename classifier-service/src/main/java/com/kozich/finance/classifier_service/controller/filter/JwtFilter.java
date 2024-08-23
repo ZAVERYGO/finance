@@ -1,6 +1,6 @@
 package com.kozich.finance.classifier_service.controller.filter;
 
-import com.kozich.finance.classifier_service.feign.client.UserFeignClient;
+import com.kozich.finance.classifier_service.controller.feign.client.UserFeignClient;
 import com.kozich.finance.classifier_service.controller.utils.JwtTokenHandler;
 import com.kozich.finance.classifier_service.core.dto.UserDTO;
 import jakarta.servlet.FilterChain;
