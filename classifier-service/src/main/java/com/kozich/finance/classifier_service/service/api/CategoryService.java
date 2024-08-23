@@ -1,8 +1,7 @@
 package com.kozich.finance.classifier_service.service.api;
 
 import com.kozich.finance.classifier_service.core.dto.CategoryDTO;
-import com.kozich.finance.classifier_service.model.CategoryEntity;
-import com.kozich.finance.classifier_service.model.CurrencyEntity;
+import com.kozich.finance.classifier_service.entity.CategoryEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;

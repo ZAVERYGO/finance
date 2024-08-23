@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,7 +26,7 @@ public class DefaultAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({RuntimeException.class})
+    @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorResponse> exception(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse("error",
                 "Сервер не смог корректно обработать запрос. Пожалуйста обратитесь к администратору");

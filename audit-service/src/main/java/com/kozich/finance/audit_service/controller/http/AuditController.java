@@ -1,13 +1,12 @@
 package com.kozich.finance.audit_service.controller.http;
 
-import com.kozich.finance.audit_service.feign.UserFeignClient;
+import com.kozich.finance.audit_service.controller.feign.UserFeignClient;
 import com.kozich.finance.audit_service.core.dto.*;
 import com.kozich.finance.audit_service.mapper.AuditMapper;
-import com.kozich.finance.audit_service.model.AuditEntity;
-import com.kozich.finance.audit_service.service.UserHolder;
+import com.kozich.finance.audit_service.entity.AuditEntity;
+import com.kozich.finance.audit_service.config.user_info.UserHolder;
 import com.kozich.finance.audit_service.service.api.AuditService;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class AuditController {
 
     @GetMapping
     public PageDTO getPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                       @RequestParam(value = "size", defaultValue = "20") Integer size) {
+                           @RequestParam(value = "size", defaultValue = "20") Integer size) {
 
         Page<AuditEntity> entities = auditService.getPage(page, size);
 

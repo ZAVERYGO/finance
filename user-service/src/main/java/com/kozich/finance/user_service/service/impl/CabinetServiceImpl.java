@@ -1,14 +1,17 @@
 package com.kozich.finance.user_service.service.impl;
 
+import com.kozich.finance.user_service.config.user_info.MyUserDetails;
+import com.kozich.finance.user_service.config.user_info.UserHolder;
 import com.kozich.finance.user_service.controller.utils.JwtTokenHandler;
+import com.kozich.finance.user_service.core.dto.LoginDTO;
+import com.kozich.finance.user_service.core.dto.MessageDTO;
+import com.kozich.finance.user_service.core.dto.RegistrationDTO;
+import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.enums.MessageStatus;
 import com.kozich.finance.user_service.core.enums.UserRole;
 import com.kozich.finance.user_service.core.enums.UserStatus;
-import com.kozich.finance.user_service.core.dto.*;
 import com.kozich.finance.user_service.entity.MessageEntity;
 import com.kozich.finance.user_service.entity.UserEntity;
-import com.kozich.finance.user_service.security.MyUserDetails;
-import com.kozich.finance.user_service.security.UserHolder;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import com.kozich.finance.user_service.service.api.MessageService;
 import com.kozich.finance.user_service.service.api.UserService;

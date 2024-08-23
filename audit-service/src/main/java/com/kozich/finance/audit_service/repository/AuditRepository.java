@@ -1,6 +1,6 @@
 package com.kozich.finance.audit_service.repository;
 
-import com.kozich.finance.audit_service.model.AuditEntity;
+import com.kozich.finance.audit_service.entity.AuditEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

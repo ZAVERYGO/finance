@@ -34,4 +34,5 @@ public class PageOperationDTO {
     private Boolean last;
 
     private List<OperationDTO> content;
+
 }

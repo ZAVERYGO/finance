@@ -1,10 +1,10 @@
 package com.kozich.finance.account_service.service.impl;
 
-import com.kozich.finance.account_service.feign.client.ClassifierFeignClient;
+import com.kozich.finance.account_service.controller.feign.client.ClassifierFeignClient;
 import com.kozich.finance.account_service.core.dto.AccountCUDTO;
-import com.kozich.finance.account_service.model.AccountEntity;
+import com.kozich.finance.account_service.entity.AccountEntity;
 import com.kozich.finance.account_service.repository.AccountRepository;
-import com.kozich.finance.account_service.service.UserHolder;
+import com.kozich.finance.account_service.config.user_info.UserHolder;
 import com.kozich.finance.account_service.service.api.AccountService;
 import feign.FeignException;
 import org.springframework.data.domain.Page;
@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             classifierFeignClient.getCurrencyById(accountCUDTO.getCurrencyUuid());
-        }catch (FeignException e){
+        } catch (FeignException e) {
             throw new IllegalArgumentException("Указанной валюты не существует");
         }
 
@@ -87,16 +87,16 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             classifierFeignClient.getCurrencyById(accountCUDTO.getCurrencyUuid());
-        }catch (FeignException e){
-            throw  new IllegalArgumentException("Указанной валюты не существует");
+        } catch (FeignException e) {
+            throw new IllegalArgumentException("Указанной валюты не существует");
         }
 
 
-        if(accountEntity.isEmpty()){
+        if (accountEntity.isEmpty()) {
             throw new IllegalArgumentException("Счета не существует");
         }
         Long dateTime = accountEntity.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
-        if(!dateTime.equals(dtUpdate)){
+        if (!dateTime.equals(dtUpdate)) {
             throw new IllegalArgumentException("Счет уже был изменен");
         }
 

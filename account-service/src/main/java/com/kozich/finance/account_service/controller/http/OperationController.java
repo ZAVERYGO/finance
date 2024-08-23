@@ -2,8 +2,7 @@ package com.kozich.finance.account_service.controller.http;
 
 import com.kozich.finance.account_service.core.dto.*;
 import com.kozich.finance.account_service.mapper.OperationMapper;
-import com.kozich.finance.account_service.model.AccountEntity;
-import com.kozich.finance.account_service.model.OperationEntity;
+import com.kozich.finance.account_service.entity.OperationEntity;
 import com.kozich.finance.account_service.service.api.OperationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -34,17 +33,15 @@ public class OperationController {
     @PostMapping("/{uuid}/operation")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@Valid @RequestBody OperationCUDTO operationCUDTO,
-                        @PathVariable(name = "uuid") UUID uuid){
-
+                       @PathVariable(name = "uuid") UUID uuid) {
         operationService.create(operationCUDTO, uuid);
-
     }
 
     @GetMapping("/{uuid}/operation")
     @ResponseStatus(HttpStatus.OK)
     public PageOperationDTO getPage(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
-                                  @NonNull @Positive @RequestParam(value = "size") Integer size,
-                                  @PathVariable(name = "uuid") UUID uuid){
+                                    @NonNull @Positive @RequestParam(value = "size") Integer size,
+                                    @PathVariable(name = "uuid") UUID uuid) {
 
         Page<OperationEntity> pageEntity = operationService.getPage(page, size, uuid);
 
@@ -64,16 +61,14 @@ public class OperationController {
             contentDTO.add(operationMapper.operationEntityToOperationDTO(operationEntity));
         }
         return pageOperationDTO.setContent(contentDTO);
-
     }
 
     @PutMapping("/{uuid}/operation/{uuid_operation}/dt_update/{dt_update}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable(name = "uuid") UUID uuid,
-                                @PathVariable(name = "uuid_operation") UUID uuidOperation,
-                                @PathVariable(name = "dt_update") Long dtUpdate,
-                                @RequestBody OperationCUDTO operationCUDTO){
-
+                       @PathVariable(name = "uuid_operation") UUID uuidOperation,
+                       @PathVariable(name = "dt_update") Long dtUpdate,
+                       @RequestBody OperationCUDTO operationCUDTO) {
         operationService.update(uuid, uuidOperation, operationCUDTO, dtUpdate);
     }
 
@@ -81,9 +76,7 @@ public class OperationController {
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable(name = "uuid") UUID uuid,
                        @PathVariable(name = "uuid_operation") UUID uuidOperation,
-                       @PathVariable(name = "dt_update") Long dtUpdate){
-
+                       @PathVariable(name = "dt_update") Long dtUpdate) {
         operationService.delete(uuid, uuidOperation, dtUpdate);
-
     }
 }

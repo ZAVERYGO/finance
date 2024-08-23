@@ -1,7 +1,7 @@
 package com.kozich.finance.classifier_service.mapper;
 
 import com.kozich.finance.classifier_service.core.dto.CurrencyDTO;
-import com.kozich.finance.classifier_service.model.CurrencyEntity;
+import com.kozich.finance.classifier_service.entity.CurrencyEntity;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

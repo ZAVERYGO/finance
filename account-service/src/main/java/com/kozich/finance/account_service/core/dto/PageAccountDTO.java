@@ -34,4 +34,5 @@ public class PageAccountDTO {
     private Boolean last;
 
     private List<AccountDTO> content;
+
 }

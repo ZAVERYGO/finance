@@ -1,7 +1,7 @@
 package com.kozich.finance.account_service.service.api;
 
 import com.kozich.finance.account_service.core.dto.OperationCUDTO;
-import com.kozich.finance.account_service.model.OperationEntity;
+import com.kozich.finance.account_service.entity.OperationEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;
@@ -17,4 +17,5 @@ public interface OperationService {
     OperationEntity update(UUID uuid, UUID uuid_operation, OperationCUDTO operationCUDTO, Long dtUpdate);
 
     void delete(UUID uuid, UUID uuid_operation, Long dtUpdate);
+
 }

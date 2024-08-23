@@ -1,6 +1,6 @@
 package com.kozich.finance.classifier_service.core.dto;
 
-import com.kozich.finance.classifier_service.core.AuditType;
+import com.kozich.finance.classifier_service.core.enums.AuditType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +21,5 @@ public class AuditCUDTO {
     private AuditType type;
 
     private String id;
+
 }

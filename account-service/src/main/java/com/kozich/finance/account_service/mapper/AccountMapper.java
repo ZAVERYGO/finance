@@ -1,7 +1,7 @@
 package com.kozich.finance.account_service.mapper;
 
 import com.kozich.finance.account_service.core.dto.AccountDTO;
-import com.kozich.finance.account_service.model.AccountEntity;
+import com.kozich.finance.account_service.entity.AccountEntity;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

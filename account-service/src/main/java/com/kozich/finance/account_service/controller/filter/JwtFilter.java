@@ -1,6 +1,6 @@
 package com.kozich.finance.account_service.controller.filter;
 
-import com.kozich.finance.account_service.feign.client.UserFeignClient;
+import com.kozich.finance.account_service.controller.feign.client.UserFeignClient;
 import com.kozich.finance.account_service.controller.utils.JwtTokenHandler;
 import com.kozich.finance.account_service.core.dto.UserDTO;
 import jakarta.servlet.FilterChain;
@@ -27,7 +27,6 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-
     private final UserFeignClient userManager;
     private final JwtTokenHandler jwtHandler;
 
@@ -48,14 +47,14 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Get jwt token and validate
+
         final String token = header.split(" ")[1].trim();
         if (!jwtHandler.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Get user identity and set it on the spring security context
+
         UserDTO myCabinet = userManager.getUserByEmail(jwtHandler.getUsername(token));
 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();

@@ -1,6 +1,8 @@
 package com.kozich.finance.user_service.controller.http;
 
-import com.kozich.finance.user_service.core.dto.*;
+import com.kozich.finance.user_service.core.dto.LoginDTO;
+import com.kozich.finance.user_service.core.dto.RegistrationDTO;
+import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import jakarta.validation.Valid;
@@ -41,7 +43,6 @@ public class CabinetController {
     @ResponseStatus(HttpStatus.OK)
     public String loginUser(@Valid @RequestBody LoginDTO loginDTO) {
         return cabinetService.loginUser(loginDTO);
-
     }
 
     @GetMapping("/me")

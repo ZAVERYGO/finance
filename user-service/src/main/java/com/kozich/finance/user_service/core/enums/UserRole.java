@@ -8,6 +8,7 @@ public enum UserRole {
     ROLE_ADMIN("ADMIN"),
     ROLE_USER("USER"),
     ROLE_MANAGER("MANAGER");
+
     private final String content;
 
     UserRole(String content) {
@@ -15,16 +16,16 @@ public enum UserRole {
     }
 
     @JsonValue
-    public String getContactType() {
+    public String getContentType() {
         return content;
     }
 
     @JsonCreator
     public static UserRole fromValue(String value) {
-        for (UserRole contact : values()) {
-            String currentContact = contact.getContactType();
+        for (UserRole content : values()) {
+            String currentContact = content.getContentType();
             if (currentContact.equals(value)) {
-                return contact;
+                return content;
             }
         }
         throw new IllegalArgumentException("Запрос содержит некорректные данные. Измените запрос и отправьте его ещё раз");

@@ -1,14 +1,12 @@
 package com.kozich.finance.audit_service.service.impl;
 
-import com.kozich.finance.audit_service.core.AuditType;
 import com.kozich.finance.audit_service.core.dto.AuditCUDTO;
 import com.kozich.finance.audit_service.mapper.AuditMapper;
-import com.kozich.finance.audit_service.model.AuditEntity;
+import com.kozich.finance.audit_service.entity.AuditEntity;
 import com.kozich.finance.audit_service.repository.AuditRepository;
 import com.kozich.finance.audit_service.service.api.AuditService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +17,15 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 public class AuditServiceImpl implements AuditService {
-    private final AuditRepository auditRepository;
-    private final AuditMapper auditMapper;
 
-    public AuditServiceImpl(AuditRepository auditRepository, AuditMapper auditMapper) {
+    private final AuditRepository auditRepository;
+
+    public AuditServiceImpl(AuditRepository auditRepository) {
         this.auditRepository = auditRepository;
-        this.auditMapper = auditMapper;
     }
 
     @Override
     public Page<AuditEntity> getPage(Integer page, Integer size) {
-
         return this.auditRepository.findAll(PageRequest.of(page, size));
     }
 
@@ -45,15 +41,12 @@ public class AuditServiceImpl implements AuditService {
                 .setId(audit.getId())
                 .setType(audit.getType());
 
-
         this.auditRepository.saveAndFlush(auditEntity);
     }
 
     @Override
     public AuditEntity get(UUID uuid) {
-
         Optional<AuditEntity> optional = this.auditRepository.findById(uuid);
-
         return optional.orElseThrow(() -> new IllegalArgumentException("Нет такого действия"));
     }
 }

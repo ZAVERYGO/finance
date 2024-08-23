@@ -1,10 +1,10 @@
 package com.kozich.finance.user_service.service.impl;
 
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
-import com.kozich.finance.user_service.mapper.UserMapper;
-import com.kozich.finance.user_service.service.api.UserService;
 import com.kozich.finance.user_service.entity.UserEntity;
+import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.repository.UserRepository;
+import com.kozich.finance.user_service.service.api.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,12 +22,10 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
-        this.userMapper = userMapper;
     }
 
     @Override

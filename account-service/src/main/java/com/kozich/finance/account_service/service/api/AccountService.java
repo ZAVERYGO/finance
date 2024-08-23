@@ -1,12 +1,9 @@
 package com.kozich.finance.account_service.service.api;
 
 import com.kozich.finance.account_service.core.dto.AccountCUDTO;
-import com.kozich.finance.account_service.core.dto.OperationCUDTO;
-import com.kozich.finance.account_service.model.AccountEntity;
-import com.kozich.finance.account_service.model.OperationEntity;
+import com.kozich.finance.account_service.entity.AccountEntity;
 import org.springframework.data.domain.Page;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public interface AccountService {
