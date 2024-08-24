@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.UUID;
 
 
@@ -35,8 +35,8 @@ public class FeignController {
                 .setFio(userEntity.getFio())
                 .setPassword(userEntity.getPassword())
                 .setStatus(userEntity.getStatus())
-                .setDtCreate(userEntity.getDtCreate().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .setDtUpdate(userEntity.getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli());
+                .setDtCreate(userEntity.getDtCreate().atZone(ZoneId.systemDefault()).toEpochSecond())
+                .setDtUpdate(userEntity.getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond());
 
     }
 
@@ -53,8 +53,8 @@ public class FeignController {
                 .setFio(userEntity.getFio())
                 .setPassword(userEntity.getPassword())
                 .setStatus(userEntity.getStatus())
-                .setDtCreate(userEntity.getDtCreate().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .setDtUpdate(userEntity.getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli());
+                .setDtCreate(userEntity.getDtCreate().atZone(ZoneId.systemDefault()).toEpochSecond())
+                .setDtUpdate(userEntity.getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond());
 
     }
 

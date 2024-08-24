@@ -11,7 +11,6 @@ import org.mapstruct.Named;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface MessageMapper {
@@ -24,7 +23,7 @@ public interface MessageMapper {
         if (dateTime == null) {
             return null;
         }
-        return Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(dateTime), ZoneId.systemDefault());
     }
 
 
@@ -37,7 +36,7 @@ public interface MessageMapper {
         if (dateTime == null) {
             return null;
         }
-        return dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+        return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
     }
 
     @Named("getEmailByUser")

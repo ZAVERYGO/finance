@@ -2,7 +2,6 @@ package com.kozich.finance.user_service.service.impl;
 
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.entity.UserEntity;
-import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.repository.UserRepository;
 import com.kozich.finance.user_service.service.api.UserService;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -79,7 +78,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Пользователя не существует");
         }
 
-        Long dateTime = userEntity.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
+        Long dateTime = userEntity.get().getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond();
         if (!dateTime.equals(dtUpdate)) {
             throw new IllegalArgumentException("Пользователь уже был изменен");
         }
@@ -97,6 +96,8 @@ public class UserServiceImpl implements UserService {
 
         if (userCUDTO.getPassword() == null) {
             resEntity.setPassword(userEntity.get().getPassword());
+        } else {
+            resEntity.setPassword(encoder.encode(userCUDTO.getPassword()));
         }
 
         return userRepository.saveAndFlush(resEntity);
