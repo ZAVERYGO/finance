@@ -1,11 +1,11 @@
 package com.kozich.finance.account_service.service.impl;
 
-import com.kozich.finance.account_service.controller.feign.client.ClassifierFeignClient;
-import com.kozich.finance.account_service.core.dto.*;
-import com.kozich.finance.account_service.entity.OperationEntity;
-import com.kozich.finance.account_service.entity.AccountEntity;
-import com.kozich.finance.account_service.repository.OperationRepository;
 import com.kozich.finance.account_service.config.user_info.UserHolder;
+import com.kozich.finance.account_service.controller.feign.client.ClassifierFeignClient;
+import com.kozich.finance.account_service.core.dto.OperationCUDTO;
+import com.kozich.finance.account_service.entity.AccountEntity;
+import com.kozich.finance.account_service.entity.OperationEntity;
+import com.kozich.finance.account_service.repository.OperationRepository;
 import com.kozich.finance.account_service.service.api.AccountService;
 import com.kozich.finance.account_service.service.api.OperationService;
 import feign.FeignException;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -96,12 +95,12 @@ public class OperationServiceImpl implements OperationService {
         if (operationEntity.isEmpty()) {
             throw new IllegalArgumentException("Операции не существует");
         }
-        Long dateTime = operationEntity.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
+        Long dateTime = operationEntity.get().getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond();
         if (!dateTime.equals(dtUpdate)) {
             throw new IllegalArgumentException("Операция уже была изменена");
         }
 
-        LocalDateTime date = Instant.ofEpochMilli(operationCUDTO.getDate()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochSecond(operationCUDTO.getDate()), ZoneId.systemDefault());
         OperationEntity operationEntityRes = operationEntity.get()
                 .setDate(date)
                 .setDescription(operationCUDTO.getDescription())
@@ -121,7 +120,7 @@ public class OperationServiceImpl implements OperationService {
             throw new IllegalArgumentException("Не существует такой операции");
         }
 
-        Long dateTime = byIdAndAccountUuid.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
+        Long dateTime = byIdAndAccountUuid.get().getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond();
         if (!dateTime.equals(dtUpdate)) {
             throw new IllegalArgumentException("Операция уже была Изменена");
         }

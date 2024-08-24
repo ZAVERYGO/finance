@@ -1,10 +1,10 @@
 package com.kozich.finance.account_service.service.impl;
 
+import com.kozich.finance.account_service.config.user_info.UserHolder;
 import com.kozich.finance.account_service.controller.feign.client.ClassifierFeignClient;
 import com.kozich.finance.account_service.core.dto.AccountCUDTO;
 import com.kozich.finance.account_service.entity.AccountEntity;
 import com.kozich.finance.account_service.repository.AccountRepository;
-import com.kozich.finance.account_service.config.user_info.UserHolder;
 import com.kozich.finance.account_service.service.api.AccountService;
 import feign.FeignException;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -95,7 +95,7 @@ public class AccountServiceImpl implements AccountService {
         if (accountEntity.isEmpty()) {
             throw new IllegalArgumentException("Счета не существует");
         }
-        Long dateTime = accountEntity.get().getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
+        Long dateTime = accountEntity.get().getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond();
         if (!dateTime.equals(dtUpdate)) {
             throw new IllegalArgumentException("Счет уже был изменен");
         }
@@ -109,9 +109,4 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.saveAndFlush(accountEntityRes);
     }
 
-
-    @Override
-    public void delete(UUID uuid) {
-
-    }
 }

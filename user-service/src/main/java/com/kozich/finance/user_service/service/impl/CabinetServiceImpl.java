@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Random;
 
 @Service
@@ -91,9 +91,9 @@ public class CabinetServiceImpl implements CabinetService {
                     .setRole(UserRole.ROLE_USER)
                     .setFio(userEntity.getFio());
 
-            long epochMilli = userEntity.getDtUpdate().toInstant(ZoneOffset.UTC).toEpochMilli();
+            long epochSecond = userEntity.getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond();
 
-            return userService.update(userEntity.getUuid(), userDTO, epochMilli);
+            return userService.update(userEntity.getUuid(), userDTO, epochSecond);
         } else {
             throw new IllegalArgumentException("Неверный код верификации");
         }

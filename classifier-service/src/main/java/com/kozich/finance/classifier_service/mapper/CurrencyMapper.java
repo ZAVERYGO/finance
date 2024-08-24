@@ -24,7 +24,7 @@ public interface CurrencyMapper {
         if (dateTime == null) {
             return null;
         }
-        return Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(dateTime), ZoneId.systemDefault());
     }
 
     @Mapping(target = "dtCreate", qualifiedByName = "mapLocalDateTimeToLong", source = "dtCreate")
@@ -36,7 +36,7 @@ public interface CurrencyMapper {
         if (dateTime == null) {
             return null;
         }
-        return dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+        return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
     }
 
 

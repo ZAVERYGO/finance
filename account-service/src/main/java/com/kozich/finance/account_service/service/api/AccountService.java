@@ -20,6 +20,4 @@ public interface AccountService {
 
     AccountEntity update(UUID uuid, AccountCUDTO accountCUDTO, Long dtUpdate);
 
-    void delete(UUID uuid);
-
 }
