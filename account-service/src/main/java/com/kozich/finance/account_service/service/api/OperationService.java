@@ -12,6 +12,8 @@ public interface OperationService {
 
     Page<OperationEntity> getPage(Integer page, Integer size, UUID accountUuid);
 
+    Page<OperationEntity> getPage(Integer page, Integer size, UUID accountUuid, String email);
+
     OperationEntity create(OperationCUDTO operationCUDTO, UUID uuid);
 
     OperationEntity update(UUID uuid, UUID uuid_operation, OperationCUDTO operationCUDTO, Long dtUpdate);

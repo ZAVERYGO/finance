@@ -10,14 +10,14 @@ public interface AccountService {
 
     AccountEntity getById(UUID uuid);
 
-    AccountEntity getByMail(String mail);
+    AccountEntity getByEmail(String mail);
 
     AccountEntity getByUuidAndEmail(UUID uuid, String mail);
 
-    Page<AccountEntity> getPage(Integer page, Integer size);
+    Page<AccountEntity> getPage(Integer page, Integer size, String email);
 
     AccountEntity create(AccountCUDTO accountCUDTO);
 
-    AccountEntity update(UUID uuid, AccountCUDTO accountCUDTO, Long dtUpdate);
+    AccountEntity update(UUID uuid, AccountCUDTO accountCUDTO, Long dtUpdate, String email);
 
 }

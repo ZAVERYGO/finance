@@ -3,9 +3,10 @@ package com.kozich.finance.account_service.controller.http;
 import com.kozich.finance.account_service.core.dto.AccountCUDTO;
 import com.kozich.finance.account_service.core.dto.AccountDTO;
 import com.kozich.finance.account_service.core.dto.PageAccountDTO;
+import com.kozich.finance.account_service.core.enums.UserRole;
 import com.kozich.finance.account_service.mapper.AccountMapper;
 import com.kozich.finance.account_service.entity.AccountEntity;
-import com.kozich.finance.account_service.config.user_info.UserHolder;
+import com.kozich.finance.account_service.util.UserHolder;
 import com.kozich.finance.account_service.service.api.AccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -46,7 +47,7 @@ public class AccountController {
     public PageAccountDTO getPage(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
                                   @NonNull @Positive @RequestParam(value = "size") Integer size) {
 
-        Page<AccountEntity> pageEntity = accountService.getPage(page, size);
+        Page<AccountEntity> pageEntity = accountService.getPage(page, size, userHolder.getUser().getUsername());
         PageAccountDTO pageAccountDTO = new PageAccountDTO()
                 .setNumber(pageEntity.getNumber())
                 .setSize(pageEntity.getSize())
@@ -67,9 +68,13 @@ public class AccountController {
 
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDTO get(@PathVariable(name = "uuid") UUID uuid) {
-        AccountEntity byId = accountService.getByUuidAndEmail(uuid, userHolder.getUser().getUsername());
-        return accountMapper.accountEntityToAccountDTO(byId);
+    public AccountDTO getById(@PathVariable(name = "uuid") UUID uuid) {
+
+        String username = userHolder.getUser().getUsername();
+        String userRole = userHolder.getUserRole();
+        return userRole.equals(UserRole.ROLE_ADMIN.name())
+                ? accountMapper.accountEntityToAccountDTO(accountService.getById(uuid))
+                : accountMapper.accountEntityToAccountDTO(accountService.getByUuidAndEmail(uuid, username));
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
@@ -77,6 +82,6 @@ public class AccountController {
     public void update(@PathVariable(value = "uuid") UUID uuid,
                        @PathVariable(value = "dt_update") Long dtUpdate,
                        @Valid @RequestBody AccountCUDTO accountCUDTO) {
-        accountService.update(uuid, accountCUDTO, dtUpdate);
+        accountService.update(uuid, accountCUDTO, dtUpdate, userHolder.getUser().getUsername());
     }
 }

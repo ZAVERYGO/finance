@@ -1,12 +1,16 @@
 package com.kozich.finance.audit_service.controller.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kozich.finance.audit_service.controller.exceptionHandler.ErrorResponse;
 import com.kozich.finance.audit_service.controller.feign.UserFeignClient;
-import com.kozich.finance.audit_service.controller.utils.JwtTokenHandler;
+import com.kozich.finance.audit_service.util.JwtTokenHandler;
 import com.kozich.finance.audit_service.core.dto.UserDTO;
+import feign.FeignException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,13 +29,14 @@ import java.util.List;
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @Component
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final UserFeignClient userFeignClient;
+    private final UserFeignClient userManager;
     private final JwtTokenHandler jwtHandler;
 
-    public JwtFilter(UserFeignClient userFeignClient, JwtTokenHandler jwtHandler) {
-        this.userFeignClient = userFeignClient;
+    public JwtFilter(UserFeignClient userManager, JwtTokenHandler jwtHandler) {
+        this.userManager = userManager;
         this.jwtHandler = jwtHandler;
     }
 
@@ -53,7 +58,24 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        UserDTO myCabinet = userFeignClient.getUserByEmail(jwtHandler.getUsername(token));
+        UserDTO myCabinet;
+
+        try {
+            myCabinet = userManager.getUserByEmail(jwtHandler.getUsername(token));
+        } catch (FeignException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json; charset=UTF-8");
+
+
+            ErrorResponse errorResponse = new ErrorResponse()
+                    .setLogref("error")
+                    .setMessage("Сервер не смог корректно обработать запрос. Пожалуйста обратитесь к администратору");
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            return;
+        }
 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
 

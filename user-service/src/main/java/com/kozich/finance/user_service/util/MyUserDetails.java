@@ -1,4 +1,4 @@
-package com.kozich.finance.user_service.config.user_info;
+package com.kozich.finance.user_service.util;
 
 import com.kozich.finance.user_service.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;

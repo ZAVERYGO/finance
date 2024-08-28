@@ -7,7 +7,7 @@ import com.kozich.finance.account_service.core.dto.AuditCUDTO;
 import com.kozich.finance.account_service.core.dto.UserAuditDTO;
 import com.kozich.finance.account_service.core.dto.UserDTO;
 import com.kozich.finance.account_service.entity.AccountEntity;
-import com.kozich.finance.account_service.config.user_info.UserHolder;
+import com.kozich.finance.account_service.util.UserHolder;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.data.domain.Page;
@@ -42,7 +42,7 @@ public class AuditAccountAspect {
     @AfterReturning(pointcut = "execution( * com.kozich.finance.account_service.service.impl.AccountServiceImpl.getById(..))", returning = "account")
     public void afterGetById(AccountEntity account) {
         UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_GET_BY_ID, userAuditDTO, userAuditDTO.getUuid().toString());
+        AuditCUDTO audit = getAuditCUDTO(TEXT_GET_BY_ID, userAuditDTO, account.getUuid().toString());
         this.auditFeign.create(audit);
     }
 

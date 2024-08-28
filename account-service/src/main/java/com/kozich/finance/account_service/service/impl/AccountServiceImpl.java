@@ -1,12 +1,11 @@
 package com.kozich.finance.account_service.service.impl;
 
-import com.kozich.finance.account_service.config.user_info.UserHolder;
+import com.kozich.finance.account_service.util.UserHolder;
 import com.kozich.finance.account_service.controller.feign.client.ClassifierFeignClient;
 import com.kozich.finance.account_service.core.dto.AccountCUDTO;
 import com.kozich.finance.account_service.entity.AccountEntity;
 import com.kozich.finance.account_service.repository.AccountRepository;
 import com.kozich.finance.account_service.service.api.AccountService;
-import feign.FeignException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,18 +39,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountEntity getByMail(String mail) {
+    public AccountEntity getByEmail(String mail) {
         return accountRepository.findByEmail(mail).orElseThrow(() -> new IllegalArgumentException("Нет такого счета"));
     }
 
     @Override
     public AccountEntity getByUuidAndEmail(UUID uuid, String mail) {
-        return accountRepository.findByUuidAndEmail(uuid, mail).orElseThrow(() -> new IllegalArgumentException("У вас нет такого счета"));
+        return accountRepository.findByUuidAndEmail(uuid, mail).orElseThrow(() -> new IllegalArgumentException("Нет такого счета"));
     }
 
     @Override
-    public Page<AccountEntity> getPage(Integer page, Integer size) {
-        return accountRepository.findAllByEmail(PageRequest.of(page, size), userHolder.getUser().getUsername());
+    public Page<AccountEntity> getPage(Integer page, Integer size, String email) {
+        return Objects.isNull(email)
+                ? accountRepository.findAll(PageRequest.of(page, size))
+                : accountRepository.findAllByEmail(PageRequest.of(page, size), email);
     }
 
     @Transactional
@@ -59,11 +61,7 @@ public class AccountServiceImpl implements AccountService {
 
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        try {
-            classifierFeignClient.getCurrencyById(accountCUDTO.getCurrencyUuid());
-        } catch (FeignException e) {
-            throw new IllegalArgumentException("Указанной валюты не существует");
-        }
+        classifierFeignClient.getCurrencyById(accountCUDTO.getCurrencyUuid());
 
         AccountEntity accountEntity = new AccountEntity()
                 .setUuid(UUID.randomUUID())
@@ -81,16 +79,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public AccountEntity update(UUID uuid, AccountCUDTO accountCUDTO, Long dtUpdate) {
+    public AccountEntity update(UUID uuid, AccountCUDTO accountCUDTO, Long dtUpdate, String email) {
 
-        Optional<AccountEntity> accountEntity = accountRepository.findById(uuid);
+        Optional<AccountEntity> accountEntity = Objects.isNull(email)
+                ? accountRepository.findById(uuid)
+                : accountRepository.findByUuidAndEmail(uuid, email);
 
-        try {
-            classifierFeignClient.getCurrencyById(accountCUDTO.getCurrencyUuid());
-        } catch (FeignException e) {
-            throw new IllegalArgumentException("Указанной валюты не существует");
-        }
-
+        classifierFeignClient.getCurrencyById(accountCUDTO.getCurrencyUuid());
 
         if (accountEntity.isEmpty()) {
             throw new IllegalArgumentException("Счета не существует");
