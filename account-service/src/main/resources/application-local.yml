@@ -9,5 +9,5 @@ spring:
 
 url:
   users: http://localhost:8082/feign
-  classifier: http://localhost:8081/feign
+  classifier: http://localhost:8085/feign
   audit: http://localhost:8087/feign

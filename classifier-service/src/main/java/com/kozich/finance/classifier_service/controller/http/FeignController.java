@@ -36,7 +36,6 @@ public class FeignController {
     public CurrencyDTO getCurrencyById(@PathVariable(value = "uuid") UUID uuid) {
         CurrencyEntity byId = currencyService.getById(uuid);
         return currencyMapper.currencyEntityToCurrencyDTO(byId);
-
     }
 
     @GetMapping("/operation/category/{uuid}")
@@ -44,6 +43,5 @@ public class FeignController {
     public CategoryDTO getCategoryById(@PathVariable(value = "uuid") UUID uuid) {
         CategoryEntity byId = categoryService.getById(uuid);
         return categoryMapper.categoryEntityToCategoryDTO(byId);
-
     }
 }

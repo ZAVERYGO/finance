@@ -1,6 +1,8 @@
 package com.kozich.finance.account_service.controller.http;
 
+import com.kozich.finance.account_service.util.UserHolder;
 import com.kozich.finance.account_service.core.dto.*;
+import com.kozich.finance.account_service.core.enums.UserRole;
 import com.kozich.finance.account_service.mapper.OperationMapper;
 import com.kozich.finance.account_service.entity.OperationEntity;
 import com.kozich.finance.account_service.service.api.OperationService;
@@ -24,10 +26,12 @@ public class OperationController {
 
     private final OperationService operationService;
     private final OperationMapper operationMapper;
+    private final UserHolder userHolder;
 
-    public OperationController(OperationService operationService, OperationMapper operationMapper) {
+    public OperationController(OperationService operationService, OperationMapper operationMapper, UserHolder userHolder) {
         this.operationService = operationService;
         this.operationMapper = operationMapper;
+        this.userHolder = userHolder;
     }
 
     @PostMapping("/{uuid}/operation")
@@ -43,7 +47,11 @@ public class OperationController {
                                     @NonNull @Positive @RequestParam(value = "size") Integer size,
                                     @PathVariable(name = "uuid") UUID uuid) {
 
-        Page<OperationEntity> pageEntity = operationService.getPage(page, size, uuid);
+        String userRole = userHolder.getUserRole();
+
+        Page<OperationEntity> pageEntity = userRole.equals(UserRole.ROLE_ADMIN.name())
+                ? operationService.getPage(page, size, uuid)
+                : operationService.getPage(page, size, uuid, userHolder.getUser().getUsername());
 
         PageOperationDTO pageOperationDTO = new PageOperationDTO()
                 .setNumber(pageEntity.getNumber())

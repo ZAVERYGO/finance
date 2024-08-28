@@ -1,4 +1,4 @@
-package com.kozich.finance.user_service.controller.utils;
+package com.kozich.finance.user_service.util;
 
 import com.kozich.finance.user_service.config.properites.JWTProperty;
 import io.jsonwebtoken.*;

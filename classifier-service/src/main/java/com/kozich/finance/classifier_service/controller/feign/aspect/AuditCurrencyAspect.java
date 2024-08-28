@@ -1,6 +1,6 @@
 package com.kozich.finance.classifier_service.controller.feign.aspect;
 
-import com.kozich.finance.classifier_service.config.user_info.UserHolder;
+import com.kozich.finance.classifier_service.util.UserHolder;
 import com.kozich.finance.classifier_service.controller.feign.client.AuditFeignClient;
 import com.kozich.finance.classifier_service.controller.feign.client.UserFeignClient;
 import com.kozich.finance.classifier_service.core.dto.AuditCUDTO;
@@ -11,7 +11,6 @@ import com.kozich.finance.classifier_service.entity.CurrencyEntity;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-
 
 @Aspect
 @Component

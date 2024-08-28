@@ -18,7 +18,6 @@ public class FeignController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody AuditCUDTO audit) {
-
         this.auditService.create(audit);
     }
 }

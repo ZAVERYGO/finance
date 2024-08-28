@@ -1,8 +1,11 @@
 package com.kozich.finance.account_service.controller.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kozich.finance.account_service.controller.exceptionHandler.ErrorResponse;
 import com.kozich.finance.account_service.controller.feign.client.UserFeignClient;
-import com.kozich.finance.account_service.controller.utils.JwtTokenHandler;
+import com.kozich.finance.account_service.util.JwtTokenHandler;
 import com.kozich.finance.account_service.core.dto.UserDTO;
+import feign.FeignException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,8 +57,25 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        UserDTO myCabinet;
 
-        UserDTO myCabinet = userManager.getUserByEmail(jwtHandler.getUsername(token));
+        try {
+            myCabinet = userManager.getUserByEmail(jwtHandler.getUsername(token));
+        } catch (FeignException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json; charset=UTF-8");
+
+
+            ErrorResponse errorResponse = new ErrorResponse()
+                    .setLogref("error")
+                    .setMessage("Сервер не смог корректно обработать запрос. Пожалуйста обратитесь к администратору");
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            return;
+        }
+
 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
 

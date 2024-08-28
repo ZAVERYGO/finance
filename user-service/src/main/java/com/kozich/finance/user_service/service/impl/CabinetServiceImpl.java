@@ -1,8 +1,5 @@
 package com.kozich.finance.user_service.service.impl;
 
-import com.kozich.finance.user_service.config.user_info.MyUserDetails;
-import com.kozich.finance.user_service.config.user_info.UserHolder;
-import com.kozich.finance.user_service.controller.utils.JwtTokenHandler;
 import com.kozich.finance.user_service.core.dto.LoginDTO;
 import com.kozich.finance.user_service.core.dto.MessageDTO;
 import com.kozich.finance.user_service.core.dto.RegistrationDTO;
@@ -15,7 +12,9 @@ import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import com.kozich.finance.user_service.service.api.MessageService;
 import com.kozich.finance.user_service.service.api.UserService;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.kozich.finance.user_service.util.JwtTokenHandler;
+import com.kozich.finance.user_service.util.MyUserDetails;
+import com.kozich.finance.user_service.util.UserHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,9 +119,7 @@ public class CabinetServiceImpl implements CabinetService {
             throw new IllegalArgumentException("Неверный логин или пароль");
         }
 
-        UserDetails userDetails = new MyUserDetails(userEntity);
-
-        return jwtHandler.generateAccessToken(userDetails);
+        return jwtHandler.generateAccessToken(new MyUserDetails(userEntity));
     }
 
     @Override

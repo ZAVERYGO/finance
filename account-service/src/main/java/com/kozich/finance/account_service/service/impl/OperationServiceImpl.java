@@ -1,6 +1,6 @@
 package com.kozich.finance.account_service.service.impl;
 
-import com.kozich.finance.account_service.config.user_info.UserHolder;
+import com.kozich.finance.account_service.util.UserHolder;
 import com.kozich.finance.account_service.controller.feign.client.ClassifierFeignClient;
 import com.kozich.finance.account_service.core.dto.OperationCUDTO;
 import com.kozich.finance.account_service.entity.AccountEntity;
@@ -8,7 +8,6 @@ import com.kozich.finance.account_service.entity.OperationEntity;
 import com.kozich.finance.account_service.repository.OperationRepository;
 import com.kozich.finance.account_service.service.api.AccountService;
 import com.kozich.finance.account_service.service.api.OperationService;
-import feign.FeignException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -48,20 +47,23 @@ public class OperationServiceImpl implements OperationService {
         return operationRepository.findAllByAccountEntity(PageRequest.of(page, size), byId);
     }
 
+    @Override
+    public Page<OperationEntity> getPage(Integer page, Integer size, UUID accountUuid, String email) {
+        AccountEntity byId = accountService.getByUuidAndEmail(accountUuid, email);
+        return operationRepository.findAllByAccountEntity(PageRequest.of(page, size), byId);
+    }
+
+
     @Transactional
     @Override
     public OperationEntity create(OperationCUDTO operationCUDTO, UUID uuid) {
 
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        try {
-            classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
-            classifierFeignClient.getCurrencyById(operationCUDTO.getCurrencyUuid());
-        } catch (FeignException e) {
-            throw new IllegalArgumentException("Не сущесвует указанной валюты или счета");
-        }
+        classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
+        classifierFeignClient.getCurrencyById(operationCUDTO.getCurrencyUuid());
 
-        AccountEntity byMail = accountService.getByMail(userHolder.getUser().getUsername());
+        AccountEntity byMail = accountService.getByEmail(userHolder.getUser().getUsername());
 
         LocalDateTime date = Instant.ofEpochMilli(operationCUDTO.getDate()).atZone(ZoneId.systemDefault()).toLocalDateTime();
         OperationEntity operationEntity = new OperationEntity()
@@ -82,15 +84,11 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public OperationEntity update(UUID uuid, UUID uuidOperation, OperationCUDTO operationCUDTO, Long dtUpdate) {
 
-        AccountEntity accountEntity = accountService.getById(uuid);
+        AccountEntity accountEntity = accountService.getByUuidAndEmail(uuid, userHolder.getUser().getUsername());
         Optional<OperationEntity> operationEntity = operationRepository.findByUuidAndAccountEntity(uuidOperation, accountEntity);
 
-        try {
-            classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
-            classifierFeignClient.getCurrencyById(operationCUDTO.getCurrencyUuid());
-        } catch (FeignException e) {
-            throw new IllegalArgumentException("Не сущесвует указанной валюты или счета");
-        }
+        classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
+        classifierFeignClient.getCurrencyById(operationCUDTO.getCurrencyUuid());
 
         if (operationEntity.isEmpty()) {
             throw new IllegalArgumentException("Операции не существует");
@@ -114,7 +112,7 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public void delete(UUID uuid, UUID uuidOperation, Long dtUpdate) {
 
-        AccountEntity byId = accountService.getById(uuid);
+        AccountEntity byId = accountService.getByUuidAndEmail(uuid, userHolder.getUser().getUsername());
         Optional<OperationEntity> byIdAndAccountUuid = operationRepository.findByUuidAndAccountEntity(uuidOperation, byId);
         if (byIdAndAccountUuid.isEmpty()) {
             throw new IllegalArgumentException("Не существует такой операции");

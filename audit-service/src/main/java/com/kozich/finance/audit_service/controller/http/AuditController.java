@@ -4,7 +4,7 @@ import com.kozich.finance.audit_service.controller.feign.UserFeignClient;
 import com.kozich.finance.audit_service.core.dto.*;
 import com.kozich.finance.audit_service.mapper.AuditMapper;
 import com.kozich.finance.audit_service.entity.AuditEntity;
-import com.kozich.finance.audit_service.config.user_info.UserHolder;
+import com.kozich.finance.audit_service.util.UserHolder;
 import com.kozich.finance.audit_service.service.api.AuditService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +19,11 @@ public class AuditController {
 
     private final AuditService auditService;
     private final AuditMapper auditMapper;
-    private final UserHolder userHolder;
     private final UserFeignClient userFeignClient;
 
-    public AuditController(AuditService auditService, AuditMapper auditMapper, UserHolder userHolder, UserFeignClient userFeignClient) {
+    public AuditController(AuditService auditService, AuditMapper auditMapper, UserFeignClient userFeignClient) {
         this.auditService = auditService;
         this.auditMapper = auditMapper;
-        this.userHolder = userHolder;
         this.userFeignClient = userFeignClient;
     }
 

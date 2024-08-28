@@ -1,6 +1,6 @@
-package com.kozich.finance.account_service.controller.utils;
+package com.kozich.finance.audit_service.util;
 
-import com.kozich.finance.account_service.config.properites.JWTProperty;
+import com.kozich.finance.audit_service.config.properites.JWTProperty;
 import io.jsonwebtoken.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
