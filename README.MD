@@ -53,7 +53,7 @@
   - **tags** - Список тегов для упрощения навигации и группировки операций в документации API.
 
 # Используемые технологии и фреймворки:
-- [Java XX](https://docs.oracle.com/en/java/javase/17/docs/api/)
+- [Java 21](https://docs.oracle.com/en/java/javase/17/docs/api/)
 - [Maven](https://maven.apache.org/)
 - [Spring Boot X.X.X](https://spring.io/projects/spring-boot)
 - [Spring Data JPA X.X.X](https://spring.io/projects/spring-data-jpa)
