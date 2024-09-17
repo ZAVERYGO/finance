@@ -71,7 +71,7 @@ public class AuditCabinetAspect {
 
     private UserAuditDTO getUserAudit() {
 
-        UserEntity userEntity = userService.getByEmail(userHolder.getUser().getUsername());
+        UserEntity userEntity = userService.getById(userHolder.getUser().getUserUUID());
 
         UserAuditDTO userAuditDTO = new UserAuditDTO()
                 .setUuid(userEntity.getUuid())

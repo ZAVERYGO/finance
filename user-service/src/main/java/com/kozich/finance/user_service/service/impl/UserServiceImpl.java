@@ -29,16 +29,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getById(UUID uuid) {
-        UserEntity userEntity = userRepository.findById(uuid)
+        return userRepository.findById(uuid)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователя не существует"));
-        return userEntity;
     }
 
     @Override
     public UserEntity getByEmail(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователя не существует"));
-        return userEntity;
     }
 
     @Override

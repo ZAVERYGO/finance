@@ -39,14 +39,11 @@ public class UserEntity {
     @Column(name = "dt_Update")
     private LocalDateTime dtUpdate;
 
-    @OneToOne(mappedBy = "userUuid")
-    private MessageEntity messageEntity;
-
     public UserEntity() {
     }
 
     public UserEntity(UUID uuid, String email, String fio, UserRole role, UserStatus status,
-                      String password, LocalDateTime dtCreate, LocalDateTime dtUpdate, MessageEntity messageEntity) {
+                      String password, LocalDateTime dtCreate, LocalDateTime dtUpdate) {
         this.uuid = uuid;
         this.email = email;
         this.fio = fio;
@@ -55,7 +52,6 @@ public class UserEntity {
         this.password = password;
         this.dtCreate = dtCreate;
         this.dtUpdate = dtUpdate;
-        this.messageEntity = messageEntity;
     }
 
 
@@ -131,12 +127,4 @@ public class UserEntity {
         return this;
     }
 
-    public MessageEntity getMessageEntity() {
-        return messageEntity;
-    }
-
-    public UserEntity setMessageEntity(MessageEntity messageEntity) {
-        this.messageEntity = messageEntity;
-        return this;
-    }
 }

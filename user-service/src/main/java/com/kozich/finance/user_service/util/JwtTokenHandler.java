@@ -17,8 +17,8 @@ public class JwtTokenHandler {
         this.property = property;
     }
 
-    public String generateAccessToken(UserDetails user) {
-        return generateAccessToken(user.getUsername());
+    public String generateAccessToken(CustomUserDetails user) {
+        return generateAccessToken(user.getUserUUID().toString());
     }
 
     public String generateAccessToken(String name) {

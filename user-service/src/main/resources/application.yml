@@ -4,9 +4,26 @@ spring:
     allow-bean-definition-overriding: true
   jpa:
     open-in-view: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin@finance.com
+    password: finance
 
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+redis:
+  host: redis
+  port: 6379
 
 app:
   jwt:
     secret: I26tXMOZepPHyd_fDTxirlfk60dgL_P0XB8D0qhY4jI
+
+EMAIL_TOPIC: message
+
 

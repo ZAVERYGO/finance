@@ -1,44 +1,47 @@
 package com.kozich.finance.user_service.service.impl;
 
+import com.kozich.finance.user_service.controller.kafka.producer.MessageProducer;
 import com.kozich.finance.user_service.core.dto.LoginDTO;
 import com.kozich.finance.user_service.core.dto.MessageDTO;
 import com.kozich.finance.user_service.core.dto.RegistrationDTO;
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
-import com.kozich.finance.user_service.core.enums.MessageStatus;
 import com.kozich.finance.user_service.core.enums.UserRole;
 import com.kozich.finance.user_service.core.enums.UserStatus;
-import com.kozich.finance.user_service.entity.MessageEntity;
 import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.service.api.CabinetService;
-import com.kozich.finance.user_service.service.api.MessageService;
+import com.kozich.finance.user_service.service.api.CacheService;
 import com.kozich.finance.user_service.service.api.UserService;
+import com.kozich.finance.user_service.util.CustomUserDetails;
 import com.kozich.finance.user_service.util.JwtTokenHandler;
-import com.kozich.finance.user_service.util.MyUserDetails;
 import com.kozich.finance.user_service.util.UserHolder;
+import com.kozich.finance.user_service.util.VerificationCodeGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
-import java.util.Random;
+import java.util.UUID;
+
 
 @Service
 @Transactional(readOnly = true)
 public class CabinetServiceImpl implements CabinetService {
 
     private final UserService userService;
-    private final MessageService messageService;
     private final UserHolder userHolder;
     private final PasswordEncoder encoder;
     private final JwtTokenHandler jwtHandler;
+    private final MessageProducer messageSender;
+    private final CacheService<UUID, Integer> cacheService;
 
-    public CabinetServiceImpl(UserService userService, MessageService messageService1, UserHolder userHolder,
-                              PasswordEncoder encoder, JwtTokenHandler jwtHandler) {
+    public CabinetServiceImpl(UserService userService, UserHolder userHolder, PasswordEncoder encoder,
+                              JwtTokenHandler jwtHandler, MessageProducer messageSender, CacheService<UUID, Integer> cacheService) {
         this.userService = userService;
-        this.messageService = messageService1;
+        this.messageSender = messageSender;
         this.userHolder = userHolder;
         this.encoder = encoder;
         this.jwtHandler = jwtHandler;
+        this.cacheService = cacheService;
     }
 
     @Transactional
@@ -58,15 +61,16 @@ public class CabinetServiceImpl implements CabinetService {
                 .setRole(UserRole.ROLE_USER)
                 .setStatus(UserStatus.WAITING_ACTIVATION));
 
-        Random random = new Random();
-        int code = random.nextInt(1000000);
+        String verificationCode = VerificationCodeGenerator.generateVerificationCode();
 
         MessageDTO messageDTO = new MessageDTO()
-                .setEmail(userEntity.getEmail())
-                .setStatus(MessageStatus.LOADED)
-                .setCode(String.valueOf(code));
+                .setToEmail(userEntity.getEmail())
+                .setSubject("Код верификации")
+                .setText(verificationCode);
 
-        messageService.create(messageDTO);
+        cacheService.save(userEntity.getUuid(), Integer.valueOf(verificationCode));
+
+        messageSender.sendMessage(messageDTO);
 
         return userEntity;
     }
@@ -81,9 +85,9 @@ public class CabinetServiceImpl implements CabinetService {
             throw new IllegalArgumentException("Пользователь уже верифицирован");
         }
 
-        MessageEntity messageEntity = messageService.getByUser(userEntity);
+        String codeCorrect = cacheService.get(userEntity.getUuid()).toString();
 
-        if (messageEntity.getCode().equals(code)) {
+        if (codeCorrect.equals(code)) {
             UserCUDTO userDTO = new UserCUDTO()
                     .setEmail(userEntity.getEmail())
                     .setStatus(UserStatus.ACTIVATED)
@@ -119,12 +123,12 @@ public class CabinetServiceImpl implements CabinetService {
             throw new IllegalArgumentException("Неверный логин или пароль");
         }
 
-        return jwtHandler.generateAccessToken(new MyUserDetails(userEntity));
+        return jwtHandler.generateAccessToken(new CustomUserDetails(userEntity));
     }
 
     @Override
     public UserEntity getMyCabinet() {
-        return userService.getByEmail(userHolder.getUser().getUsername());
+        return userService.getById(userHolder.getUser().getUserUUID());
     }
 
 }
