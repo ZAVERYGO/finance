@@ -8,6 +8,7 @@ services:
       - 81:8080
     networks:
       - finance-network
+
   pg_db:
     build: postgresql
     image: postgresql-finance:1.0.2
@@ -34,6 +35,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
     networks:
+      - redis-network
+      - kafka-network
       - finance-network
 
   classifier-service:
@@ -60,14 +63,46 @@ services:
     networks:
       - finance-network
 
+  message-service:
+    build: message-service
+    image: message-service:1.0.1
+    entrypoint:
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - finance-network
+      - kafka-network
+
   proxy:
     build: proxy
     image: proxy_finance:1.0.6
     ports:
       - 80:80
     networks:
-    - finance-network
+      - finance-network
 
+  redis:
+    image: redis:latest
+    networks:
+      - redis-network
+
+  kafka:
+    image: wurstmeister/kafka
+    networks:
+      - kafka-network
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    networks:
+      - kafka-network
 
 networks:
+  redis-network:
   finance-network:
+  kafka-network:

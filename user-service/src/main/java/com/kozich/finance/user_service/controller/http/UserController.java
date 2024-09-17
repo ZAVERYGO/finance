@@ -1,6 +1,6 @@
 package com.kozich.finance.user_service.controller.http;
 
-import com.kozich.finance.user_service.core.dto.PageUserDTO;
+import com.kozich.finance.user_service.core.dto.PageDTO;
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.entity.UserEntity;
@@ -40,12 +40,12 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PageUserDTO getPage(@PositiveOrZero @RequestParam(value = "page", defaultValue = "0") Integer page,
+    public PageDTO<UserDTO> getPage(@PositiveOrZero @RequestParam(value = "page", defaultValue = "0") Integer page,
                                @Positive @RequestParam(value = "size", defaultValue = "20") Integer size) {
 
         Page<UserEntity> pageEntity = userService.getPage(page, size);
 
-        PageUserDTO pageUserDTO = new PageUserDTO()
+        PageDTO<UserDTO> pageUserDTO = new PageDTO<UserDTO>()
                 .setNumber(pageEntity.getNumber())
                 .setSize(pageEntity.getSize())
                 .setTotalPages(pageEntity.getTotalPages())

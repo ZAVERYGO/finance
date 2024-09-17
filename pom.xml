@@ -15,6 +15,7 @@
         <module>classifier-service</module>
         <module>account-service</module>
         <module>audit-service</module>
+        <module>message-service</module>
     </modules>
 
 </project>

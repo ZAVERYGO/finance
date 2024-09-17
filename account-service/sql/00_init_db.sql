@@ -1,3 +1,4 @@
+
 CREATE ROLE audit_app WITH
 	LOGIN
 	NOSUPERUSER

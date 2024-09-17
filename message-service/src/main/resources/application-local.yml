@@ -1,0 +1,12 @@
+server:
+  port: 8088
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/message
+    username: message_app
+    password: 123456
+
+url:
+  users: http://localhost:8082/feign
+

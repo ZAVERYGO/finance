@@ -1,6 +1,5 @@
 package com.kozich.finance.user_service.controller.filter;
 
-import com.kozich.finance.user_service.util.MyUserDetails;
 import com.kozich.finance.user_service.util.JwtTokenHandler;
 import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.service.api.UserService;
@@ -10,13 +9,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
@@ -49,9 +54,48 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        UserEntity userEntity = userService.getByEmail(jwtHandler.getUsername(token));
+        UserEntity userEntity = userService.getById(UUID.fromString(jwtHandler.getUsername(token)));
 
-        MyUserDetails userDetails = new MyUserDetails(userEntity);
+        List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
+
+        simpleGrantedAuthorities.add(new SimpleGrantedAuthority(userEntity.getRole().name()));
+        UserDetails userDetails = new UserDetails() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return simpleGrantedAuthorities;
+            }
+
+            @Override
+            public String getPassword() {
+                return userEntity.getPassword();
+            }
+
+            @Override
+            public String getUsername() {
+                return userEntity.getUuid().toString();
+            }
+
+            @Override
+            public boolean isAccountNonExpired() {
+                return UserDetails.super.isAccountNonExpired();
+            }
+
+            @Override
+            public boolean isAccountNonLocked() {
+                return UserDetails.super.isAccountNonLocked();
+            }
+
+            @Override
+            public boolean isCredentialsNonExpired() {
+                return UserDetails.super.isCredentialsNonExpired();
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return UserDetails.super.isEnabled();
+            }
+        };
+
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
