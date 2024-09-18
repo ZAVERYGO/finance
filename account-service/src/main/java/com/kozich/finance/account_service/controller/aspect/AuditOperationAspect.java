@@ -1,4 +1,4 @@
-package com.kozich.finance.account_service.controller.feign.aspect;
+package com.kozich.finance.account_service.controller.aspect;
 
 import com.kozich.finance.account_service.controller.feign.client.AuditFeignClient;
 import com.kozich.finance.account_service.controller.feign.client.UserFeignClient;
