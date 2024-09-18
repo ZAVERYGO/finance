@@ -1,4 +1,4 @@
-package com.kozich.finance.classifier_service.controller.feign.aspect;
+package com.kozich.finance.classifier_service.controller.aspect;
 
 import com.kozich.finance.classifier_service.util.UserHolder;
 import com.kozich.finance.classifier_service.controller.feign.client.AuditFeignClient;
