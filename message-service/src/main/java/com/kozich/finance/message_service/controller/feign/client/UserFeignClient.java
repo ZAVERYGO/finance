@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.UUID;
+
 
 @FeignClient(name = "user-service", url = "${url.users}")
 public interface UserFeignClient {
 
     @GetMapping("/byId")
     @ResponseStatus(HttpStatus.OK)
-    UserDTO getUserById(@RequestParam(value = "uuid") String uuid);
+    UserDTO getUserById(@RequestParam(value = "uuid") UUID uuid);
 
 }

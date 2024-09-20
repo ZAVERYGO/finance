@@ -23,7 +23,7 @@ public class MessageConsumer {
         this.messageSender = messageSenderService;
     }
 
-    @KafkaListener(topics = "${kafka.topics.message_1}", groupId = "${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = "${kafka.topics.message_1}", groupId = "${spring.kafka.consumer.group-id}", concurrency = "5")
     public void sendMessage(MessageSendDTO message) {
 
         MessageCUDTO messageCUDTO = new MessageCUDTO().setText(message.getText())
