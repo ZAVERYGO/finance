@@ -12,9 +12,6 @@ spring:
 
   kafka:
     bootstrap-servers: kafka:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 redis:
   host: redis
@@ -24,6 +21,8 @@ app:
   jwt:
     secret: I26tXMOZepPHyd_fDTxirlfk60dgL_P0XB8D0qhY4jI
 
-EMAIL_TOPIC: message
+kafka:
+  topics:
+    message_1: message
 
 

@@ -10,7 +10,7 @@ public class MessageProducer {
 
     private final KafkaTemplate<String, MessageDTO> kafkaTemplate;
 
-    @Value("${EMAIL_TOPIC}")
+    @Value("${kafka.topics.message_1}")
     private String emailTopic;
 
     public MessageProducer(KafkaTemplate<String, MessageDTO> kafkaTemplate) {
