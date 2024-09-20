@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
@@ -59,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
         UserDTO myCabinet;
 
         try {
-            myCabinet = userManager.getUserById(jwtHandler.getUserName(token));
+            myCabinet = userManager.getUserById(UUID.fromString(jwtHandler.getUserName(token)));
         } catch (FeignException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.setContentType("application/json; charset=UTF-8");

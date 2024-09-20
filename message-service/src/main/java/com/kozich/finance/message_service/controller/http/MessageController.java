@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/email")
+@RequestMapping("/message")
 public class MessageController {
 
     private final MessageService messageService;
@@ -28,7 +28,7 @@ public class MessageController {
         this.messageMapper = messageMapper;
     }
 
-    @GetMapping("/message")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<MessageDTO> getPage(@PositiveOrZero @RequestParam(value = "page", defaultValue = "0") Integer page,
                               @Positive @RequestParam(value = "size", defaultValue = "20") Integer size) {
