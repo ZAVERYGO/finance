@@ -81,10 +81,14 @@ services:
     networks:
       - finance-network
 
+
   redis:
-    image: redis:latest
+    image: redis/redis-stack:latest
+    ports:
+      - 8091:8001
     networks:
       - redis-network
+
 
   kafka:
     image: wurstmeister/kafka
@@ -96,9 +100,20 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "message:3:1"
 
   zookeeper:
     image: wurstmeister/zookeeper
+    networks:
+      - kafka-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8090:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: "kafka-cluster"
+      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: "kafka:9092"
     networks:
       - kafka-network
 

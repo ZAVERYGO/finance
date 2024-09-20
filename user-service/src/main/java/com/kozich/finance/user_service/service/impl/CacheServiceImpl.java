@@ -35,7 +35,7 @@ public class CacheServiceImpl<K, V> implements CacheService<K, V> {
     }
 
     @Override
-    public V DeleteAndGet(K key) {
+    public V deleteAndGet(K key) {
         V value = redisTemplate.opsForValue().get(key);
         redisTemplate.delete(key);
         return value;

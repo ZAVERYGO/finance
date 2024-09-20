@@ -12,6 +12,6 @@ public interface CacheService<K, V> {
 
     void delete(K key);
 
-    V DeleteAndGet(K key);
+    V deleteAndGet(K key);
 
 }

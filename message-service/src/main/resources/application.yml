@@ -9,16 +9,12 @@ spring:
     bootstrap-servers: kafka:9092
     consumer:
       group-id: message-service-group
-      auto-offset-reset: earliest
-      enable-auto-commit: true
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.value.default.type: com.kozich.finance.message_service.core.dto.MessageSendDTO
 
 app:
   jwt:
     secret: I26tXMOZepPHyd_fDTxirlfk60dgL_P0XB8D0qhY4jI
 
-EMAIL_TOPIC: message
+kafka:
+  topics:
+    message_1: message
 
