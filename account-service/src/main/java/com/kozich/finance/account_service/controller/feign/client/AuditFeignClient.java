@@ -1,6 +1,6 @@
 package com.kozich.finance.account_service.controller.feign.client;
 
-import com.kozich.finance.account_service.core.dto.AuditCUDTO;
+import com.kozich.finance_storage.core.dto.AuditDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +12,6 @@ public interface AuditFeignClient {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void create(@RequestBody() AuditCUDTO audit);
+    void create(@RequestBody() AuditDTO audit);
 
 }

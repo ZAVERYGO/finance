@@ -1,8 +1,8 @@
 package com.kozich.finance.user_service.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kozich.finance.user_service.core.enums.UserRole;
-import com.kozich.finance.user_service.core.enums.UserStatus;
+import com.kozich.finance_storage.core.enums.UserRole;
+import com.kozich.finance_storage.core.enums.UserStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

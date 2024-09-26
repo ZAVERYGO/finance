@@ -3,8 +3,9 @@ package com.kozich.finance.classifier_service.controller.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kozich.finance.classifier_service.controller.exceptionHandler.ErrorResponse;
 import com.kozich.finance.classifier_service.controller.feign.client.UserFeignClient;
+import com.kozich.finance.classifier_service.util.CustomUserDetails;
 import com.kozich.finance.classifier_service.util.JwtTokenHandler;
-import com.kozich.finance.classifier_service.core.dto.UserDTO;
+import com.kozich.finance_storage.core.dto.UserDTO;
 import feign.FeignException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,17 +13,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
@@ -59,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
         UserDTO myCabinet;
 
         try {
-            myCabinet = userManager.getUserByEmail(jwtHandler.getUsername(token));
+            myCabinet = userManager.getUserById(jwtHandler.getUsername(token));
         } catch (FeignException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.setContentType("application/json; charset=UTF-8");
@@ -79,48 +77,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         simpleGrantedAuthorities.add(new SimpleGrantedAuthority(myCabinet.getRole().name()));
 
-        UserDetails userDetails = new UserDetails() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return simpleGrantedAuthorities;
-            }
-
-            @Override
-            public String getPassword() {
-                return myCabinet.getPassword();
-            }
-
-            @Override
-            public String getUsername() {
-                return myCabinet.getEmail();
-            }
-
-            @Override
-            public boolean isAccountNonExpired() {
-                return UserDetails.super.isAccountNonExpired();
-            }
-
-            @Override
-            public boolean isAccountNonLocked() {
-                return UserDetails.super.isAccountNonLocked();
-            }
-
-            @Override
-            public boolean isCredentialsNonExpired() {
-                return UserDetails.super.isCredentialsNonExpired();
-            }
-
-            @Override
-            public boolean isEnabled() {
-                return UserDetails.super.isEnabled();
-            }
-        };
+        CustomUserDetails customUserDetails = new CustomUserDetails(myCabinet);
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null,
-                userDetails == null ?
-                        List.of() : userDetails.getAuthorities()
+                customUserDetails, null,
+                customUserDetails == null ?
+                        List.of() : customUserDetails.getAuthorities()
         );
 
         authentication.setDetails(

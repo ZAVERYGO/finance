@@ -2,12 +2,12 @@ package com.kozich.finance.account_service.controller.http;
 
 import com.kozich.finance.account_service.core.dto.AccountCUDTO;
 import com.kozich.finance.account_service.core.dto.AccountDTO;
-import com.kozich.finance.account_service.core.dto.PageAccountDTO;
-import com.kozich.finance.account_service.core.enums.UserRole;
 import com.kozich.finance.account_service.mapper.AccountMapper;
 import com.kozich.finance.account_service.entity.AccountEntity;
 import com.kozich.finance.account_service.util.UserHolder;
 import com.kozich.finance.account_service.service.api.AccountService;
+import com.kozich.finance_storage.core.dto.PageDTO;
+import com.kozich.finance_storage.core.enums.UserRole;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -44,11 +44,11 @@ public class AccountController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public PageAccountDTO getPage(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
-                                  @NonNull @Positive @RequestParam(value = "size") Integer size) {
+    public PageDTO<AccountDTO> getPage(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
+                           @NonNull @Positive @RequestParam(value = "size") Integer size) {
 
         Page<AccountEntity> pageEntity = accountService.getPage(page, size, userHolder.getUser().getUsername());
-        PageAccountDTO pageAccountDTO = new PageAccountDTO()
+        PageDTO<AccountDTO> pageAccountDTO = new PageDTO<AccountDTO>()
                 .setNumber(pageEntity.getNumber())
                 .setSize(pageEntity.getSize())
                 .setTotalPages(pageEntity.getTotalPages())
@@ -70,11 +70,9 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public AccountDTO getById(@PathVariable(name = "uuid") UUID uuid) {
 
-        String username = userHolder.getUser().getUsername();
-        String userRole = userHolder.getUserRole();
-        return userRole.equals(UserRole.ROLE_ADMIN.name())
+        return userHolder.getUserRole().equals(UserRole.ROLE_ADMIN.name())
                 ? accountMapper.accountEntityToAccountDTO(accountService.getById(uuid))
-                : accountMapper.accountEntityToAccountDTO(accountService.getByUuidAndEmail(uuid, username));
+                : accountMapper.accountEntityToAccountDTO(accountService.getByUuidAndUserId(uuid, userHolder.getUser().getUsername()));
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")

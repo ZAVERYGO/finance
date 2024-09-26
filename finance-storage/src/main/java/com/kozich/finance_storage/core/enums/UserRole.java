@@ -1,4 +1,4 @@
-package com.kozich.finance.user_service.core.enums;
+package com.kozich.finance_storage.core.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -16,16 +16,16 @@ public enum UserRole {
     }
 
     @JsonValue
-    public String getContentType() {
+    public String getContactType() {
         return content;
     }
 
     @JsonCreator
     public static UserRole fromValue(String value) {
-        for (UserRole content : values()) {
-            String currentContact = content.getContentType();
+        for (UserRole contact : values()) {
+            String currentContact = contact.getContactType();
             if (currentContact.equals(value)) {
-                return content;
+                return contact;
             }
         }
         throw new IllegalArgumentException("Запрос содержит некорректные данные. Измените запрос и отправьте его ещё раз");

@@ -1,4 +1,4 @@
-package com.kozich.finance.message_service.core.enums;
+package com.kozich.finance_storage.core.enums;
 
 public enum MessageStatus {
 

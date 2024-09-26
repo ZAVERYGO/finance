@@ -1,6 +1,6 @@
 package com.kozich.finance.user_service.controller.kafka.producer;
 
-import com.kozich.finance.user_service.core.dto.MessageDTO;
+import com.kozich.finance_storage.core.dto.MessageDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

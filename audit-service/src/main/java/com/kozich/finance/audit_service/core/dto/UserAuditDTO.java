@@ -1,6 +1,6 @@
 package com.kozich.finance.audit_service.core.dto;
 
-import com.kozich.finance.audit_service.core.enums.UserRole;
+import com.kozich.finance_storage.core.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

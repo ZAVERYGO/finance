@@ -1,4 +1,4 @@
-package com.kozich.finance.message_service.core.dto;
+package com.kozich.finance_storage.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class MessageSendDTO {
+public class MessageDTO {
 
     @JsonProperty("to_email")
     private String toEmail;

@@ -1,11 +1,12 @@
 package com.kozich.finance.message_service.controller.kafka.consumer;
 
 import com.kozich.finance.message_service.core.dto.MessageCUDTO;
-import com.kozich.finance.message_service.core.dto.MessageSendDTO;
-import com.kozich.finance.message_service.core.enums.MessageStatus;
+
 import com.kozich.finance.message_service.entity.MessageEntity;
 import com.kozich.finance.message_service.service.api.MessageSenderService;
 import com.kozich.finance.message_service.service.api.MessageService;
+import com.kozich.finance_storage.core.dto.MessageDTO;
+import com.kozich.finance_storage.core.enums.MessageStatus;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,8 @@ public class MessageConsumer {
         this.messageSender = messageSenderService;
     }
 
-    @KafkaListener(topics = "${kafka.topics.message_1}", groupId = "${spring.kafka.consumer.group-id}", concurrency = "5")
-    public void sendMessage(MessageSendDTO message) {
+    @KafkaListener(topics = "${kafka.topics.message_1}", groupId = "${spring.kafka.consumer.group-id}", concurrency = "3")
+    public void sendMessage(MessageDTO message) {
 
         MessageCUDTO messageCUDTO = new MessageCUDTO().setText(message.getText())
                 .setToEmail(message.getToEmail())

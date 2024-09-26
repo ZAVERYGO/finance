@@ -38,8 +38,8 @@ public class AccountEntity {
     @Column(name = "currency_uuid")
     private UUID currencyUuid;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "user_uuid")
+    private UUID userId;
 
     @OneToMany(mappedBy = "accountEntity")
     private List<OperationEntity> operationEntityList;
@@ -47,7 +47,7 @@ public class AccountEntity {
 
     public AccountEntity(UUID uuid, String title, String description,
                          Integer balance, AccountType type, LocalDateTime dtCreate,
-                         LocalDateTime dtUpdate, UUID currencyUuid, String email) {
+                         LocalDateTime dtUpdate, UUID currencyUuid) {
         this.uuid = uuid;
         this.title = title;
         this.description = description;
@@ -56,7 +56,6 @@ public class AccountEntity {
         this.dtCreate = dtCreate;
         this.dtUpdate = dtUpdate;
         this.currencyUuid = currencyUuid;
-        this.email = email;
     }
 
     public AccountEntity() {
@@ -134,12 +133,12 @@ public class AccountEntity {
         return this;
     }
 
-    public String getEmail() {
-        return email;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public AccountEntity setEmail(String email) {
-        this.email = email;
+    public AccountEntity setUserId(UUID userId) {
+        this.userId = userId;
         return this;
     }
 

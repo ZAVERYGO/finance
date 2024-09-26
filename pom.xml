@@ -16,6 +16,7 @@
         <module>account-service</module>
         <module>audit-service</module>
         <module>message-service</module>
+        <module>finance-storage</module>
     </modules>
 
 </project>

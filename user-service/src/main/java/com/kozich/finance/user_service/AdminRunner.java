@@ -1,9 +1,9 @@
 package com.kozich.finance.user_service;
 
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
-import com.kozich.finance.user_service.core.enums.UserRole;
-import com.kozich.finance.user_service.core.enums.UserStatus;
 import com.kozich.finance.user_service.service.api.UserService;
+import com.kozich.finance_storage.core.enums.UserRole;
+import com.kozich.finance_storage.core.enums.UserStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

@@ -2,8 +2,6 @@ package com.kozich.finance.classifier_service.controller.http;
 
 import com.kozich.finance.classifier_service.core.dto.CategoryDTO;
 import com.kozich.finance.classifier_service.core.dto.CurrencyDTO;
-import com.kozich.finance.classifier_service.entity.CategoryEntity;
-import com.kozich.finance.classifier_service.entity.CurrencyEntity;
 import com.kozich.finance.classifier_service.mapper.CategoryMapper;
 import com.kozich.finance.classifier_service.mapper.CurrencyMapper;
 import com.kozich.finance.classifier_service.service.api.CategoryService;
@@ -34,14 +32,12 @@ public class FeignController {
     @GetMapping("/currency/{uuid}")
     @ResponseStatus(HttpStatus.OK)
     public CurrencyDTO getCurrencyById(@PathVariable(value = "uuid") UUID uuid) {
-        CurrencyEntity byId = currencyService.getById(uuid);
-        return currencyMapper.currencyEntityToCurrencyDTO(byId);
+        return currencyMapper.currencyEntityToCurrencyDTO(currencyService.getById(uuid));
     }
 
     @GetMapping("/operation/category/{uuid}")
     @ResponseStatus(HttpStatus.OK)
     public CategoryDTO getCategoryById(@PathVariable(value = "uuid") UUID uuid) {
-        CategoryEntity byId = categoryService.getById(uuid);
-        return categoryMapper.categoryEntityToCategoryDTO(byId);
+        return categoryMapper.categoryEntityToCategoryDTO(categoryService.getById(uuid));
     }
 }

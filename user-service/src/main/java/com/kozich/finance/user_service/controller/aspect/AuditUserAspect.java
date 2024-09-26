@@ -1,14 +1,13 @@
 package com.kozich.finance.user_service.controller.aspect;
 
 import com.kozich.finance.user_service.controller.feign.client.AuditFeignClient;
-import com.kozich.finance.user_service.core.dto.AuditCUDTO;
-import com.kozich.finance.user_service.core.dto.UserAuditDTO;
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
-import com.kozich.finance.user_service.core.enums.AuditType;
 import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.service.api.UserService;
 import com.kozich.finance.user_service.util.UserHolder;
+import com.kozich.finance_storage.core.dto.AuditDTO;
+import com.kozich.finance_storage.core.enums.AuditType;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,55 +40,37 @@ public class AuditUserAspect {
     public void afterCreate(JoinPoint joinPoint) {
         UserCUDTO userCUDTO = (UserCUDTO) joinPoint.getArgs()[0];
         UserEntity userEntity = userService.getByEmail(userCUDTO.getEmail());
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_CREATE, userAuditDTO, userEntity.getUuid().toString());
-        this.auditServiceFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), userEntity.getUuid().toString(), TEXT_CREATE);
+        this.auditServiceFeignClient.create(auditDTO);
     }
 
     @AfterReturning(pointcut = "execution( * com.kozich.finance.user_service.controller.http.UserController.getPage(..))", returning = "page")
     public void afterGetPage(Page<UserEntity> page) {
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_GET_ALL, userAuditDTO, String.valueOf(page.hashCode()));
-        this.auditServiceFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), page.toString(), TEXT_GET_ALL);
+        this.auditServiceFeignClient.create(auditDTO);
     }
 
     @AfterReturning(pointcut = "execution( * com.kozich.finance.user_service.controller.http.UserController.getById(..))", returning = "user")
     public void afterGetById(UserDTO user) {
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_GET_BY_ID, userAuditDTO, user.getUuid().toString());
-        this.auditServiceFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), user.getUuid().toString(), TEXT_GET_BY_ID);
+        this.auditServiceFeignClient.create(auditDTO);
     }
 
     @AfterReturning(pointcut = "execution( * com.kozich.finance.user_service.controller.http.UserController.update(..))")
     public void afterUpdate(JoinPoint joinPoint) {
         UUID uuid = (UUID) joinPoint.getArgs()[1];
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_UPDATE, userAuditDTO, uuid.toString());
-        this.auditServiceFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), uuid.toString(), TEXT_UPDATE);
+        this.auditServiceFeignClient.create(auditDTO);
     }
 
-    private UserAuditDTO getUserAudit() {
+    private AuditDTO getAuditDTO(UUID userId, String id, String text) {
 
-        UserEntity userEntity = userService.getById(userHolder.getUser().getUserUUID());
-
-        UserAuditDTO userAuditDTO = new UserAuditDTO()
-                .setUuid(userEntity.getUuid())
-                .setRole(userEntity.getRole())
-                .setMail(userEntity.getEmail())
-                .setFio(userEntity.getFio());
-
-        return userAuditDTO;
-    }
-
-    private AuditCUDTO getAuditCUDTO(String text, UserAuditDTO user, String id) {
-
-        AuditCUDTO auditCUDTO = new AuditCUDTO()
-                .setUser(user)
+        return new AuditDTO()
+                .setUserId(userId)
                 .setType(AuditType.USER)
                 .setId(id)
                 .setText(text);
 
-        return auditCUDTO;
     }
 
 }

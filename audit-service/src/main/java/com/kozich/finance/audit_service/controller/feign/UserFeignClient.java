@@ -1,7 +1,7 @@
 package com.kozich.finance.audit_service.controller.feign;
 
 
-import com.kozich.finance.audit_service.core.dto.UserDTO;
+import com.kozich.finance_storage.core.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;

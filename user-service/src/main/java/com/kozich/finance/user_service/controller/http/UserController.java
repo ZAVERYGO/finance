@@ -1,11 +1,11 @@
 package com.kozich.finance.user_service.controller.http;
 
-import com.kozich.finance.user_service.core.dto.PageDTO;
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
 import com.kozich.finance.user_service.core.dto.UserDTO;
 import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.mapper.UserMapper;
 import com.kozich.finance.user_service.service.api.UserService;
+import com.kozich.finance_storage.core.dto.PageDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -41,7 +41,7 @@ public class UserController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PageDTO<UserDTO> getPage(@PositiveOrZero @RequestParam(value = "page", defaultValue = "0") Integer page,
-                               @Positive @RequestParam(value = "size", defaultValue = "20") Integer size) {
+                                    @Positive @RequestParam(value = "size", defaultValue = "20") Integer size) {
 
         Page<UserEntity> pageEntity = userService.getPage(page, size);
 

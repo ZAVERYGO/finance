@@ -2,14 +2,13 @@ package com.kozich.finance.classifier_service.controller.http;
 
 import com.kozich.finance.classifier_service.core.dto.CategoryDTO;
 import com.kozich.finance.classifier_service.core.dto.CurrencyDTO;
-import com.kozich.finance.classifier_service.core.dto.PageCategoryDTO;
-import com.kozich.finance.classifier_service.core.dto.PageCurrencyDTO;
 import com.kozich.finance.classifier_service.entity.CategoryEntity;
 import com.kozich.finance.classifier_service.entity.CurrencyEntity;
 import com.kozich.finance.classifier_service.mapper.CategoryMapper;
 import com.kozich.finance.classifier_service.mapper.CurrencyMapper;
 import com.kozich.finance.classifier_service.service.api.CategoryService;
 import com.kozich.finance.classifier_service.service.api.CurrencyService;
+import com.kozich.finance_storage.core.dto.PageDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -49,12 +48,12 @@ public class ClassifierController {
 
     @GetMapping("/currency")
     @ResponseStatus(HttpStatus.OK)
-    public PageCurrencyDTO getPageCurrency(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
-                                           @NonNull @Positive @RequestParam(value = "size") Integer size) {
+    public PageDTO<CurrencyDTO> getPageCurrency(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
+                                                @NonNull @Positive @RequestParam(value = "size") Integer size) {
 
         Page<CurrencyEntity> pageEntity = currencyService.getPage(page, size);
 
-        PageCurrencyDTO pageCurrencyDTO = new PageCurrencyDTO()
+        PageDTO<CurrencyDTO> pageCurrencyDTO = new PageDTO<CurrencyDTO>()
                 .setNumber(pageEntity.getNumber())
                 .setSize(pageEntity.getSize())
                 .setTotalPages(pageEntity.getTotalPages())
@@ -82,12 +81,12 @@ public class ClassifierController {
 
     @GetMapping("/operation/category")
     @ResponseStatus(HttpStatus.OK)
-    public PageCategoryDTO getPageCategory(@NotNull @PositiveOrZero @RequestParam(value = "page") Integer page,
+    public PageDTO<CategoryDTO> getPageCategory(@NotNull @PositiveOrZero @RequestParam(value = "page") Integer page,
                                            @NotNull @Positive @RequestParam(value = "size") Integer size) {
 
         Page<CategoryEntity> pageEntity = categoryService.getPage(page, size);
 
-        PageCategoryDTO pageCategoryDTO = new PageCategoryDTO()
+        PageDTO<CategoryDTO> pageCategoryDTO = new PageDTO<CategoryDTO>()
                 .setNumber(pageEntity.getNumber())
                 .setSize(pageEntity.getSize())
                 .setTotalPages(pageEntity.getTotalPages())

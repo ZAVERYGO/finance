@@ -1,6 +1,6 @@
 package com.kozich.finance.audit_service.entity;
 
-import com.kozich.finance.audit_service.core.enums.AuditType;
+import com.kozich.finance_storage.core.enums.AuditType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
