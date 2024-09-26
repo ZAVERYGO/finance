@@ -12,10 +12,8 @@ import java.util.UUID;
 @Repository
 public interface AccountRepository extends JpaRepository<AccountEntity, UUID> {
 
-    Optional<AccountEntity> findByEmail(String mail);
+    Page<AccountEntity> findAllByUserId(PageRequest pageRequest, UUID userId);
 
-    Page<AccountEntity> findAllByEmail(PageRequest pageRequest, String mail);
-
-    Optional<AccountEntity> findByUuidAndEmail(UUID uuid, String mail);
+    Optional<AccountEntity> findByUuidAndUserId(UUID uuid, UUID userId);
 
 }

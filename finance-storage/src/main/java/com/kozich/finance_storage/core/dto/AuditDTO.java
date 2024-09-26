@@ -1,6 +1,7 @@
-package com.kozich.finance.account_service.core.dto;
+package com.kozich.finance_storage.core.dto;
 
-import com.kozich.finance.account_service.core.enums.UserRole;
+
+import com.kozich.finance_storage.core.enums.AuditType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +15,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class UserAuditDTO {
+public class AuditDTO {
 
-    private UUID uuid;
+    private UUID userId;
 
-    private String mail;
+    private String text;
 
-    private String fio;
+    private AuditType type;
 
-    private UserRole role;
+    private String id;
 
 }

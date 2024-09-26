@@ -2,11 +2,8 @@ package com.kozich.finance.user_service.service.impl;
 
 import com.kozich.finance.user_service.controller.kafka.producer.MessageProducer;
 import com.kozich.finance.user_service.core.dto.LoginDTO;
-import com.kozich.finance.user_service.core.dto.MessageDTO;
 import com.kozich.finance.user_service.core.dto.RegistrationDTO;
 import com.kozich.finance.user_service.core.dto.UserCUDTO;
-import com.kozich.finance.user_service.core.enums.UserRole;
-import com.kozich.finance.user_service.core.enums.UserStatus;
 import com.kozich.finance.user_service.entity.UserEntity;
 import com.kozich.finance.user_service.service.api.CabinetService;
 import com.kozich.finance.user_service.service.api.CacheService;
@@ -15,6 +12,9 @@ import com.kozich.finance.user_service.util.CustomUserDetails;
 import com.kozich.finance.user_service.util.JwtTokenHandler;
 import com.kozich.finance.user_service.util.UserHolder;
 import com.kozich.finance.user_service.util.VerificationCodeGenerator;
+import com.kozich.finance_storage.core.dto.MessageDTO;
+import com.kozich.finance_storage.core.enums.UserRole;
+import com.kozich.finance_storage.core.enums.UserStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,7 +128,7 @@ public class CabinetServiceImpl implements CabinetService {
 
     @Override
     public UserEntity getMyCabinet() {
-        return userService.getById(userHolder.getUser().getUserUUID());
+        return userService.getById(userHolder.getUser().getUsername());
     }
 
 }

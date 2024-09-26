@@ -3,10 +3,10 @@ package com.kozich.finance.message_service.util;
 import com.kozich.finance.message_service.config.properites.JWTProperty;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -19,19 +19,22 @@ public class JwtTokenHandler {
         this.property = property;
     }
 
-    public String generateAccessToken(UserDetails user) {
+    public String generateAccessToken(CustomUserDetails user) {
         return generateAccessToken(user.getUsername());
     }
 
-    public String generateAccessToken(String name) {
-        return Jwts.builder().setSubject(name).setIssuer(property.getIssuer()).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7))) // 1 week
+    public String generateAccessToken(UUID name) {
+        return Jwts.builder()
+                .setSubject(name.toString())
+                .setIssuer(property.getIssuer()).setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
                 .signWith(SignatureAlgorithm.HS512, property.getSecret()).compact();
     }
 
-    public String getUserName(String token) {
+    public UUID getUsername(String token) {
         Claims claims = Jwts.parser().setSigningKey(property.getSecret()).parseClaimsJws(token).getBody();
 
-        return claims.getSubject();
+        return UUID.fromString(claims.getSubject());
     }
 
     public Date getExpirationDate(String token) {

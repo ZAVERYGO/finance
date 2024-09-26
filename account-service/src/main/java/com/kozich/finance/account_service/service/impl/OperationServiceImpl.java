@@ -48,8 +48,8 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public Page<OperationEntity> getPage(Integer page, Integer size, UUID accountUuid, String email) {
-        AccountEntity byId = accountService.getByUuidAndEmail(accountUuid, email);
+    public Page<OperationEntity> getPage(Integer page, Integer size, UUID accountUuid, UUID userId) {
+        AccountEntity byId = accountService.getByUuidAndUserId(accountUuid, userId);
         return operationRepository.findAllByAccountEntity(PageRequest.of(page, size), byId);
     }
 
@@ -63,7 +63,7 @@ public class OperationServiceImpl implements OperationService {
         classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
         classifierFeignClient.getCurrencyById(operationCUDTO.getCurrencyUuid());
 
-        AccountEntity byMail = accountService.getByEmail(userHolder.getUser().getUsername());
+        AccountEntity byMail = accountService.getByUuidAndUserId(uuid, userHolder.getUser().getUsername());
 
         LocalDateTime date = Instant.ofEpochMilli(operationCUDTO.getDate()).atZone(ZoneId.systemDefault()).toLocalDateTime();
         OperationEntity operationEntity = new OperationEntity()
@@ -84,7 +84,7 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public OperationEntity update(UUID uuid, UUID uuidOperation, OperationCUDTO operationCUDTO, Long dtUpdate) {
 
-        AccountEntity accountEntity = accountService.getByUuidAndEmail(uuid, userHolder.getUser().getUsername());
+        AccountEntity accountEntity = accountService.getById(uuid);
         Optional<OperationEntity> operationEntity = operationRepository.findByUuidAndAccountEntity(uuidOperation, accountEntity);
 
         classifierFeignClient.getCategoryById(operationCUDTO.getCategoryUuid());
@@ -112,7 +112,7 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public void delete(UUID uuid, UUID uuidOperation, Long dtUpdate) {
 
-        AccountEntity byId = accountService.getByUuidAndEmail(uuid, userHolder.getUser().getUsername());
+        AccountEntity byId = accountService.getById(uuid);
         Optional<OperationEntity> byIdAndAccountUuid = operationRepository.findByUuidAndAccountEntity(uuidOperation, byId);
         if (byIdAndAccountUuid.isEmpty()) {
             throw new IllegalArgumentException("Не существует такой операции");
@@ -120,7 +120,7 @@ public class OperationServiceImpl implements OperationService {
 
         Long dateTime = byIdAndAccountUuid.get().getDtUpdate().atZone(ZoneId.systemDefault()).toEpochSecond();
         if (!dateTime.equals(dtUpdate)) {
-            throw new IllegalArgumentException("Операция уже была Изменена");
+            throw new IllegalArgumentException("Операция уже была изменена");
         }
         operationRepository.deleteById(uuidOperation);
     }

@@ -11,7 +11,7 @@ CREATE TABLE app.account
     dt_create TIMESTAMP NOT NULL,
     dt_update TIMESTAMP NOT NULL,
     currency_uuid uuid NOT NULL,
-    email character varying NOT NULL,
+    user_uuid uuid varying NOT NULL,
     CONSTRAINT account_uuid_pk PRIMARY KEY (uuid)
 );
 

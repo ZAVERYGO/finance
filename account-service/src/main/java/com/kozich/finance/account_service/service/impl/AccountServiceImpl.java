@@ -39,20 +39,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountEntity getByEmail(String mail) {
-        return accountRepository.findByEmail(mail).orElseThrow(() -> new IllegalArgumentException("Нет такого счета"));
+    public AccountEntity getByUuidAndUserId(UUID uuid, UUID userId) {
+        return accountRepository.findByUuidAndUserId(uuid, userId).orElseThrow(() -> new IllegalArgumentException("Нет такого счета"));
     }
 
     @Override
-    public AccountEntity getByUuidAndEmail(UUID uuid, String mail) {
-        return accountRepository.findByUuidAndEmail(uuid, mail).orElseThrow(() -> new IllegalArgumentException("Нет такого счета"));
-    }
-
-    @Override
-    public Page<AccountEntity> getPage(Integer page, Integer size, String email) {
-        return Objects.isNull(email)
+    public Page<AccountEntity> getPage(Integer page, Integer size, UUID userId) {
+        return Objects.isNull(userId)
                 ? accountRepository.findAll(PageRequest.of(page, size))
-                : accountRepository.findAllByEmail(PageRequest.of(page, size), email);
+                : accountRepository.findAllByUserId(PageRequest.of(page, size), userId);
     }
 
     @Transactional
@@ -72,18 +67,18 @@ public class AccountServiceImpl implements AccountService {
                 .setDtCreate(localDateTime)
                 .setDtUpdate(localDateTime)
                 .setCurrencyUuid(accountCUDTO.getCurrencyUuid())
-                .setEmail(userHolder.getUser().getUsername());
+                .setUserId(userHolder.getUser().getUsername());
 
         return accountRepository.saveAndFlush(accountEntity);
     }
 
     @Transactional
     @Override
-    public AccountEntity update(UUID uuid, AccountCUDTO accountCUDTO, Long dtUpdate, String email) {
+    public AccountEntity update(UUID uuid, AccountCUDTO accountCUDTO, Long dtUpdate, UUID userId) {
 
-        Optional<AccountEntity> accountEntity = Objects.isNull(email)
+        Optional<AccountEntity> accountEntity = Objects.isNull(userId)
                 ? accountRepository.findById(uuid)
-                : accountRepository.findByUuidAndEmail(uuid, email);
+                : accountRepository.findByUuidAndUserId(uuid, userId);
 
         classifierFeignClient.getCurrencyById(accountCUDTO.getCurrencyUuid());
 

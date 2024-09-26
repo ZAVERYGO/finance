@@ -1,7 +1,7 @@
 package com.kozich.finance.audit_service.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kozich.finance.audit_service.core.enums.AuditType;
+import com.kozich.finance_storage.core.enums.AuditType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

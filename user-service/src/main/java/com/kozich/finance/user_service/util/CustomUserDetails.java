@@ -26,7 +26,7 @@ public class CustomUserDetails {
         return userEntity.getPassword();
     }
 
-    public UUID getUserUUID() {
+    public UUID getUsername() {
         return userEntity.getUuid();
     }
 

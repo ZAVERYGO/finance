@@ -1,7 +1,7 @@
 package com.kozich.finance.message_service.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kozich.finance.message_service.core.enums.MessageStatus;
+import com.kozich.finance_storage.core.enums.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

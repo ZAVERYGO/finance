@@ -1,13 +1,10 @@
 package com.kozich.finance.account_service.controller.aspect;
 
 import com.kozich.finance.account_service.controller.feign.client.AuditFeignClient;
-import com.kozich.finance.account_service.controller.feign.client.UserFeignClient;
-import com.kozich.finance.account_service.core.enums.AuditType;
-import com.kozich.finance.account_service.core.dto.AuditCUDTO;
-import com.kozich.finance.account_service.core.dto.UserAuditDTO;
-import com.kozich.finance.account_service.core.dto.UserDTO;
 import com.kozich.finance.account_service.entity.OperationEntity;
 import com.kozich.finance.account_service.util.UserHolder;
+import com.kozich.finance_storage.core.dto.AuditDTO;
+import com.kozich.finance_storage.core.enums.AuditType;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.data.domain.Page;
@@ -20,71 +17,49 @@ import java.util.UUID;
 public class AuditOperationAspect {
 
     private final AuditFeignClient auditFeignClient;
-    private final UserFeignClient userFeignClient;
     private final UserHolder userHolder;
     private final static String TEXT_CREATE = "Создание операции";
     private final static String TEXT_GET_ALL = "Получение списка операций";
     private final static String TEXT_UPDATE = "Обновление операции";
     private final static String TEXT_DELETE = "Удаление операции";
 
-    public AuditOperationAspect(AuditFeignClient auditFeignClient, UserFeignClient userFeignClient,
-                                UserHolder userHolder) {
+    public AuditOperationAspect(AuditFeignClient auditFeignClient, UserHolder userHolder) {
         this.auditFeignClient = auditFeignClient;
-        this.userFeignClient = userFeignClient;
         this.userHolder = userHolder;
     }
 
     @AfterReturning(pointcut = "execution( * com.kozich.finance.account_service.service.impl.OperationServiceImpl.create(..))", returning = "operation")
     public void afterCreate(OperationEntity operation) {
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_CREATE, userAuditDTO, operation.getUuid().toString());
-        auditFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), operation.getUuid().toString(), TEXT_CREATE);
+        auditFeignClient.create(auditDTO);
     }
 
     @AfterReturning(pointcut = "execution( * com.kozich.finance.account_service.service.impl.OperationServiceImpl.getPage(..))", returning = "page")
     public void afterGetAll(Page<OperationEntity> page) {
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_GET_ALL, userAuditDTO, String.valueOf(page.hashCode()));
-        auditFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), String.valueOf(page.hashCode()), TEXT_GET_ALL);
+        auditFeignClient.create(auditDTO);
     }
 
     @AfterReturning(pointcut = "execution( * com.kozich.finance.account_service.service.impl.OperationServiceImpl.update(..))", returning = "operationEntity")
     public void afterUpdate(OperationEntity operationEntity) {
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_UPDATE, userAuditDTO, operationEntity.getUuid().toString());
-        auditFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), operationEntity.getUuid().toString(), TEXT_UPDATE);
+        auditFeignClient.create(auditDTO);
     }
 
     @AfterReturning(pointcut = "execution( * com.kozich.finance.account_service.service.impl.OperationServiceImpl.delete(..)) && args(uuid, uuidOperation, dtUpdate)", argNames = "uuid,uuidOperation,dtUpdate")
     public void afterDelete(UUID uuid, UUID uuidOperation, Long dtUpdate) {
-        UserAuditDTO userAuditDTO = getUserAudit();
-        AuditCUDTO audit = getAuditCUDTO(TEXT_DELETE, userAuditDTO, uuidOperation.toString());
-        auditFeignClient.create(audit);
+        AuditDTO auditDTO = getAuditDTO(userHolder.getUser().getUsername(), uuidOperation.toString(), TEXT_DELETE);
+        auditFeignClient.create(auditDTO);
     }
 
-    private UserAuditDTO getUserAudit() {
+    private AuditDTO getAuditDTO(UUID userId, String id, String text) {
 
-        UserDTO userByEmail = userFeignClient.getUserByEmail(
-                userHolder.getUser().getUsername());
-
-        UserAuditDTO userAuditDTO = new UserAuditDTO()
-                .setMail(userByEmail.getEmail())
-                .setUuid(userByEmail.getUuid())
-                .setFio(userByEmail.getFio())
-                .setRole(userByEmail.getRole());
-
-        return userAuditDTO;
-    }
-
-
-    private AuditCUDTO getAuditCUDTO(String text, UserAuditDTO user, String id) {
-
-        AuditCUDTO auditCUDTO = new AuditCUDTO()
-                .setUser(user)
-                .setType(AuditType.OPERATION)
+        return new AuditDTO()
+                .setUserId(userId)
+                .setType(AuditType.USER)
                 .setId(id)
                 .setText(text);
 
-        return auditCUDTO;
     }
+
 }

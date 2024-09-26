@@ -4,8 +4,9 @@ import com.kozich.finance.audit_service.controller.feign.UserFeignClient;
 import com.kozich.finance.audit_service.core.dto.*;
 import com.kozich.finance.audit_service.mapper.AuditMapper;
 import com.kozich.finance.audit_service.entity.AuditEntity;
-import com.kozich.finance.audit_service.util.UserHolder;
 import com.kozich.finance.audit_service.service.api.AuditService;
+import com.kozich.finance_storage.core.dto.PageDTO;
+import com.kozich.finance_storage.core.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +29,12 @@ public class AuditController {
     }
 
     @GetMapping
-    public PageDTO getPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public PageDTO<AuditDTO> getPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                            @RequestParam(value = "size", defaultValue = "20") Integer size) {
 
         Page<AuditEntity> entities = auditService.getPage(page, size);
 
-        PageDTO pageDTO = new PageDTO()
+        PageDTO<AuditDTO> pageDTO = new PageDTO<AuditDTO>()
                 .setNumber(entities.getNumber())
                 .setSize(entities.getSize())
                 .setLast(entities.isLast())

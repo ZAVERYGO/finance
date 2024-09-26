@@ -1,11 +1,13 @@
 package com.kozich.finance.account_service.controller.http;
 
-import com.kozich.finance.account_service.util.UserHolder;
-import com.kozich.finance.account_service.core.dto.*;
-import com.kozich.finance.account_service.core.enums.UserRole;
-import com.kozich.finance.account_service.mapper.OperationMapper;
+import com.kozich.finance.account_service.core.dto.OperationCUDTO;
+import com.kozich.finance.account_service.core.dto.OperationDTO;
 import com.kozich.finance.account_service.entity.OperationEntity;
+import com.kozich.finance.account_service.mapper.OperationMapper;
 import com.kozich.finance.account_service.service.api.OperationService;
+import com.kozich.finance.account_service.util.UserHolder;
+import com.kozich.finance_storage.core.dto.PageDTO;
+import com.kozich.finance_storage.core.enums.UserRole;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -43,9 +45,9 @@ public class OperationController {
 
     @GetMapping("/{uuid}/operation")
     @ResponseStatus(HttpStatus.OK)
-    public PageOperationDTO getPage(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
-                                    @NonNull @Positive @RequestParam(value = "size") Integer size,
-                                    @PathVariable(name = "uuid") UUID uuid) {
+    public PageDTO<OperationDTO> getPage(@NonNull @PositiveOrZero @RequestParam(value = "page") Integer page,
+                                         @NonNull @Positive @RequestParam(value = "size") Integer size,
+                                         @PathVariable(name = "uuid") UUID uuid) {
 
         String userRole = userHolder.getUserRole();
 
@@ -53,7 +55,7 @@ public class OperationController {
                 ? operationService.getPage(page, size, uuid)
                 : operationService.getPage(page, size, uuid, userHolder.getUser().getUsername());
 
-        PageOperationDTO pageOperationDTO = new PageOperationDTO()
+        PageDTO<OperationDTO> pageOperationDTO = new PageDTO<OperationDTO>()
                 .setNumber(pageEntity.getNumber())
                 .setSize(pageEntity.getSize())
                 .setTotalPages(pageEntity.getTotalPages())

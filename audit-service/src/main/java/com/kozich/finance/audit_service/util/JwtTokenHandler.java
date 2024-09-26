@@ -2,10 +2,12 @@ package com.kozich.finance.audit_service.util;
 
 import com.kozich.finance.audit_service.config.properites.JWTProperty;
 import io.jsonwebtoken.*;
+import org.eclipse.angus.mail.util.UUDecoderStream;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -31,13 +33,13 @@ public class JwtTokenHandler {
                 .compact();
     }
 
-    public String getUsername(String token) {
+    public UUID getUsername(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(property.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject();
+        return UUID.fromString(claims.getSubject());
     }
 
     public Date getExpirationDate(String token) {

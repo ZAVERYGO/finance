@@ -1,6 +1,6 @@
 package com.kozich.finance.message_service.entity;
 
-import com.kozich.finance.message_service.core.enums.MessageStatus;
+import com.kozich.finance_storage.core.enums.MessageStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

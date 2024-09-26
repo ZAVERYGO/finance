@@ -1,4 +1,4 @@
-package com.kozich.finance.classifier_service.core.dto;
+package com.kozich.finance_storage.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class PageCategoryDTO {
+public class PageDTO<T> {
 
     private Integer number;
 
@@ -33,6 +33,6 @@ public class PageCategoryDTO {
 
     private Boolean last;
 
-    private List<CategoryDTO> content;
+    private List<T> content;
 
 }

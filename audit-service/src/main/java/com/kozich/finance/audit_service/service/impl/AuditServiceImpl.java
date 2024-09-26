@@ -1,10 +1,9 @@
 package com.kozich.finance.audit_service.service.impl;
 
-import com.kozich.finance.audit_service.core.dto.AuditCUDTO;
-import com.kozich.finance.audit_service.mapper.AuditMapper;
 import com.kozich.finance.audit_service.entity.AuditEntity;
 import com.kozich.finance.audit_service.repository.AuditRepository;
 import com.kozich.finance.audit_service.service.api.AuditService;
+import com.kozich.finance_storage.core.dto.AuditDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,17 +30,17 @@ public class AuditServiceImpl implements AuditService {
 
     @Transactional
     @Override
-    public void create(AuditCUDTO audit) {
+    public AuditEntity create(AuditDTO audit) {
 
         AuditEntity auditEntity = new AuditEntity()
                 .setUuid(UUID.randomUUID())
-                .setUser(audit.getUser().getUuid())
+                .setUser(audit.getUserId())
                 .setText(audit.getText())
                 .setDtCreate(LocalDateTime.now())
                 .setId(audit.getId())
                 .setType(audit.getType());
 
-        this.auditRepository.saveAndFlush(auditEntity);
+        return this.auditRepository.saveAndFlush(auditEntity);
     }
 
     @Override
