@@ -52,8 +52,6 @@ public class DefaultAdvice {
             }
         }
 
-        System.out.println(1 + 2 + "3");
-
         return new ResponseEntity<>(errorResponse, responseError);
     }
 
